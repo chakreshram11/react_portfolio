@@ -59,7 +59,7 @@ function Home() {
           {/* Social Media Icons */}
           <div className="flex justify-center md:justify-center space-x-6 mt-6">
             <a
-              href="https://www.facebook.com"
+              href="https://www.facebook.com/chakresh.ram.1"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:text-cyan-500 text-2xl"
@@ -67,7 +67,7 @@ function Home() {
               <FaFacebook />
             </a>
             <a
-              href="https://www.linkedin.com"
+              href="https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:text-cyan-500 text-2xl"
@@ -75,7 +75,7 @@ function Home() {
               <FaLinkedin />
             </a>
             <a
-              href="https://www.instagram.com"
+              href="https://www.instagram.com/chakreshram/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:text-cyan-500 text-2xl"
@@ -83,7 +83,7 @@ function Home() {
               <FaInstagram />
             </a>
             <a
-              href="mailto:chakreshram05@gmail.com"
+              href="mailto:chakreshram11@gmail.com"
               className="text-cyan-400 hover:text-cyan-500 text-2xl"
             >
               <FaEnvelope />
