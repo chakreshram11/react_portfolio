@@ -104,11 +104,11 @@ function Home() {
         {/* Right Side (Image with Hexagon Background) */}
         <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-8 md:mt-0">
           <div className="relative">
-            <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] lg:w-[600px] lg:h-[600px] bg-cyan-400 rounded-full shadow-glow flex items-center justify-center relative">
+            <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] lg:mr-4 lg:mt-9 bg-cyan-400 rounded-full shadow-glow flex items-center justify-center relative">
               <img
                 src={Photo} // Replace `Photo` with the path to your image file
                 alt="Chakresh Ram"
-                className="w-[295px] h-[295px] md:w-[440px] md:h-[440px] lg:w-[590px] lg:h-[590px] object-cover rounded-full"
+                className="w-[295px] h-[295px] md:w-[440px] md:h-[440px] lg:w-[490px] lg:h-[490px] object-cover rounded-full"
               />
             </div>
           </div>
