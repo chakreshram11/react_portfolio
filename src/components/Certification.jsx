@@ -3,10 +3,10 @@ import React from "react";
 // Sample Certification Data
 const certifications = [
   {
-    title: "Certified Web Developer",
-    organization: "FreeCodeCamp",
+    title: "Cyberscurity Awareness Training",
+    organization: "",
     date: "January 2023",
-    link: "https://www.freecodecamp.org/certification",
+    link: "https://drive.google.com/file/d/136QN2fSUXsEGC8VM7tp4KeSHSFYvNAvP/view?usp=sharing",
     image: "https://via.placeholder.com/200x120.png?text=FreeCodeCamp", // Placeholder for image
   },
   {
@@ -29,6 +29,13 @@ const certifications = [
     date: "June 2023",
     link: "https://www.udemy.com/certificate",
     image: "https://via.placeholder.com/200x120.png?text=Udemy", // Placeholder for image
+  },
+  {
+    title: "6-Week Workshop on Cybersecurity Modules",
+    organization: "Kakinada Institute of Engineering And Technology - (Robotics Lab)",
+    date: "June 2024",
+    link: "https://drive.google.com/file/d/136QN2fSUXsEGC8VM7tp4KeSHSFYvNAvP/view?usp=sharing",
+    image: "./assets/robotics.jpg"
   },
 ];
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import Photo from "../asserts/photo.png";
+import Photo from "../assets/photo.png";
 import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
 
 function Home() {
