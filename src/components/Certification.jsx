@@ -1,41 +1,38 @@
 import React from "react";
+import Robotics from '../assets/robotics.jpg';
+import Into_to_Ai from '../assets/intro_to_ai.jpg';
+import Excel from '../assets/excel_begin.jpg';
+import Cyberawareness from '../assets/cybersecurity_awareness_training.png';
 
 // Sample Certification Data
 const certifications = [
   {
     title: "Cyberscurity Awareness Training",
-    organization: "",
-    date: "January 2023",
+    organization: "KIET ROBOTICS",
+    date: "Jun 2023",
     link: "https://drive.google.com/file/d/136QN2fSUXsEGC8VM7tp4KeSHSFYvNAvP/view?usp=sharing",
-    image: "https://via.placeholder.com/200x120.png?text=FreeCodeCamp", // Placeholder for image
+    image: Robotics, // Placeholder for image
   },
   {
-    title: "React Developer Certification",
-    organization: "Udemy",
+    title: "Introduction to Artificial Intelligence",
+    organization: "Great Learning",
     date: "March 2023",
-    link: "https://www.udemy.com/certificate",
-    image: "https://via.placeholder.com/200x120.png?text=Udemy", // Placeholder for image
+    link: "https://drive.google.com/file/d/1cSlMCJ_wu1zlYih2KyuOYxjOrvHJj-OS/view?usp=drive_link",
+    image: Into_to_Ai, // Placeholder for image
   },
   {
-    title: "Cyber Security Basics",
-    organization: "Coursera",
+    title: "Excel for Beginners",
+    organization: "Great Learning",
     date: "July 2023",
-    link: "https://www.coursera.org/certificates",
-    image: "https://via.placeholder.com/200x120.png?text=Coursera", // Placeholder for image
+    link: "https://drive.google.com/file/d/1V_0rKovCXa-PuPiVVN3NKJaEjcCJUkyV/view?usp=sharing",
+    image: Excel, // Placeholder for image
   },
   {
-    title: "Advanced CSS & Sass",
-    organization: "Udemy",
+    title: "Cyber Security Awareness",
+    organization: "Amazon",
     date: "June 2023",
-    link: "https://www.udemy.com/certificate",
-    image: "https://via.placeholder.com/200x120.png?text=Udemy", // Placeholder for image
-  },
-  {
-    title: "6-Week Workshop on Cybersecurity Modules",
-    organization: "Kakinada Institute of Engineering And Technology - (Robotics Lab)",
-    date: "June 2024",
-    link: "https://drive.google.com/file/d/136QN2fSUXsEGC8VM7tp4KeSHSFYvNAvP/view?usp=sharing",
-    image: "./assets/robotics.jpg"
+    link: "https://drive.google.com/file/d/1215ba5RlSbvtd4qJEVuDQ5kgbCznaFAk/view?usp=sharing",
+    image: Cyberawareness, // Placeholder for image
   },
 ];
 
