@@ -12,31 +12,31 @@ const certifications = [
   {
     title: "Cyber Security Awareness Training",
     organization: "Amazon",
-    date: "2023",
+    date: "Nov 2021",
     link: CyberSecurityPDF,
   },
   {
     title: "Introduction to Artificial Intelligence",
     organization: "Great Learning",
-    date: "2023",
+    date: "Nov 2021",
     link: AIcertificatePDF,
   },
   {
     title: "Excel for Beginners",
     organization: "Great Learning",
-    date: "2023",
+    date: "Nov 2021",
     link: ExcelCertificatePDF,
   },
   {
     title: "Zscaler Networking Virtual Internship",
     organization: "AICTE Platform",
-    date: "2023",
+    date: "Dec 2024",
     link: ZscalerPDF,
   },
   {
     title: "Palo Alto Cybersecurity Virtual Internship",
     organization: "AICTE Platform",
-    date: "2023",
+    date: "Mar 2025",
     link: PaloAltoPDF,
   },
 ];
