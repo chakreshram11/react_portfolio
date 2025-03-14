@@ -1,34 +1,43 @@
 import React from "react";
 
+// Import PDFs from the local folder
+import CyberSecurityPDF from "../certificates/cybersecurityamazon.pdf";
+import AIcertificatePDF from "../certificates/ai.pdf";
+import ExcelCertificatePDF from "../certificates/excel.pdf";
+import ZscalerPDF from "../certificates/zscaler.pdf";
+import PaloAltoPDF from "../certificates/paloalto.pdf";
+
 // Sample Certification Data
 const certifications = [
   {
-    title: "Certified Web Developer",
-    organization: "FreeCodeCamp",
-    date: "January 2023",
-    link: "https://www.freecodecamp.org/certification",
-    image: "https://via.placeholder.com/200x120.png?text=FreeCodeCamp", // Placeholder for image
+    title: "Cyber Security Awareness Training",
+    organization: "Amazon",
+    date: "2023",
+    link: CyberSecurityPDF,
   },
   {
-    title: "React Developer Certification",
-    organization: "Udemy",
-    date: "March 2023",
-    link: "https://www.udemy.com/certificate",
-    image: "https://via.placeholder.com/200x120.png?text=Udemy", // Placeholder for image
+    title: "Introduction to Artificial Intelligence",
+    organization: "Great Learning",
+    date: "2023",
+    link: AIcertificatePDF,
   },
   {
-    title: "Cyber Security Basics",
-    organization: "Coursera",
-    date: "July 2023",
-    link: "https://www.coursera.org/certificates",
-    image: "https://via.placeholder.com/200x120.png?text=Coursera", // Placeholder for image
+    title: "Excel for Beginners",
+    organization: "Great Learning",
+    date: "2023",
+    link: ExcelCertificatePDF,
   },
   {
-    title: "Advanced CSS & Sass",
-    organization: "Udemy",
-    date: "June 2023",
-    link: "https://www.udemy.com/certificate",
-    image: "https://via.placeholder.com/200x120.png?text=Udemy", // Placeholder for image
+    title: "Zscaler Networking Virtual Internship",
+    organization: "AICTE Platform",
+    date: "2023",
+    link: ZscalerPDF,
+  },
+  {
+    title: "Palo Alto Cybersecurity Virtual Internship",
+    organization: "AICTE Platform",
+    date: "2023",
+    link: PaloAltoPDF,
   },
 ];
 
@@ -36,31 +45,31 @@ function Certification() {
   return (
     <section
       id="certifications"
-      className="bg-gray-800 text-white py-16 px-6 sm:px-12 lg:px-24"
+      className="bg-gray-900 text-white py-16 px-6 sm:px-12 lg:px-24"
     >
       <div className="container mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-cyan-400 mb-8">
+        <h2 className="text-4xl sm:text-5xl font-extrabold text-cyan-400 mb-8 tracking-wide">
           My Certifications
         </h2>
-        <p className="text-lg sm:text-xl mb-12">
-          Below are the certifications I've earned, showcasing my continuous
-          learning and commitment to professional development.
+        <p className="text-lg sm:text-xl text-gray-300 mb-12">
+          Here are some of my certifications showcasing my expertise and
+          continuous learning.
         </p>
 
         {/* Certification List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {certifications.map((cert, index) => (
             <div
               key={index}
-              className="bg-gray-900 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative"
+              className="bg-gray-800 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700"
             >
-              {/* Certification Image */}
+              {/* Embedded PDF Viewer */}
               <div className="mb-4">
-                <img
-                  src={cert.image}
-                  alt={cert.organization}
-                  className="w-full h-32 object-cover rounded-lg shadow-md transition-all duration-300 hover:scale-105"
-                />
+                <iframe
+                  src={cert.link}
+                  className="w-full h-56 rounded-lg shadow-md border border-cyan-500"
+                  title={cert.title}
+                ></iframe>
               </div>
 
               <h3 className="text-xl font-semibold text-cyan-400 mb-2">
@@ -76,7 +85,7 @@ function Certification() {
                 href={cert.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-400 hover:text-cyan-500 text-lg font-semibold"
+                className="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-lg font-semibold text-md transition-all duration-300 inline-block"
               >
                 View Certificate
               </a>
