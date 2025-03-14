@@ -24,7 +24,6 @@ function Home() {
       setTypedText((prev) => currentPhrase.slice(0, prev.length + 1));
 
       if (typedText === currentPhrase) {
-        // After finishing the current phrase, move to the next one
         setTypedText(""); // Reset typed text for the next phrase
         setIndex((prev) => (prev + 1) % phrases.length); // Loop back to 0 after the last phrase
       }
@@ -36,28 +35,28 @@ function Home() {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center bg-gray-900 text-center px-4 md:px-8 lg:px-12"
+      className="min-h-screen flex items-center justify-center bg-gray-900 text-center px-4 md:px-14 lg:px-16"
     >
-      <div className="container mx-auto flex flex-col md:flex-row items-center">
+      {/* Responsive container: Image on top in mobile, side-by-side in desktop */}
+      <div className="container mx-auto flex flex-col-reverse md:flex-row items-center gap-8 md:gap-12">
+        
         {/* Left Side (Text Content) */}
-        <div className="w-full md:w-1/2 text-white md:pr-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
+        <div className="w-full md:w-1/2 text-white text-center md:text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
             Hello, It's Me
           </h1>
-          <h2>
-            <span className="text-cyan-400 text-3xl md:text-4xl lg:text-5xl font-extrabold">
-              KUDUPUDI CHAKRESH RAM
-            </span>
+          <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-cyan-400">
+            KUDUPUDI CHAKRESH RAM
           </h2>
           <p className="mt-4 text-lg md:text-xl lg:text-2xl">
             And I'm a{" "}
-            <span className="text-2xl md:text-4xl lg:text-5xl font-bold text-cyan-400 animation typing">
-              {typedText} {/* Render the typed phrase */}
+            <span className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-cyan-400">
+              {typedText}
             </span>
           </p>
 
           {/* Social Media Icons */}
-          <div className="flex justify-center md:justify-center space-x-6 mt-6">
+          <div className="flex justify-center md:justify-start space-x-6 mt-6">
             <a
               href="https://www.facebook.com/chakresh.ram.1"
               target="_blank"
@@ -91,10 +90,10 @@ function Home() {
           </div>
 
           {/* Download CV Button */}
-          <div className="flex justify-center md:justify-center space-x-4 mt-6">
+          <div className="flex justify-center md:justify-start mt-6">
             <a
               href="#contact"
-              className="bg-cyan-400 hover:bg-cyan-500 text-black px-4 py-2 rounded-md"
+              className="bg-cyan-400 hover:bg-cyan-500 text-black px-6 py-2 rounded-md font-semibold text-lg"
             >
               Download CV
             </a>
@@ -102,13 +101,13 @@ function Home() {
         </div>
 
         {/* Right Side (Image with Hexagon Background) */}
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-8 md:mt-0">
+        <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative">
-            <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] lg:mr-4 lg:mt-9 bg-cyan-400 rounded-full shadow-glow flex items-center justify-center relative">
+            <div className="w-[250px] sm:w-[300px] md:w-[400px] lg:w-[450px] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[450px] bg-cyan-400 rounded-full shadow-glow flex items-center justify-center">
               <img
-                src={Photo} // Replace `Photo` with the path to your image file
+                src={Photo}
                 alt="Chakresh Ram"
-                className="w-[295px] h-[295px] md:w-[440px] md:h-[440px] lg:w-[490px] lg:h-[490px] object-cover rounded-full"
+                className="w-[97%] h-[97%] object-cover rounded-full"
               />
             </div>
           </div>

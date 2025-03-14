@@ -45,7 +45,7 @@ function Certification() {
   return (
     <section
       id="certifications"
-      className="bg-gray-900 text-white py-16 px-6 sm:px-12 lg:px-24"
+      className="bg-gray-800 text-white py-16 px-6 sm:px-12 lg:px-24"
     >
       <div className="container mx-auto text-center">
         <h2 className="text-4xl sm:text-5xl font-extrabold text-cyan-400 mb-8 tracking-wide">
@@ -61,7 +61,7 @@ function Certification() {
           {certifications.map((cert, index) => (
             <div
               key={index}
-              className="bg-gray-800 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700"
+              className="bg-gray-900 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700"
             >
               {/* Embedded PDF Viewer */}
               <div className="mb-4">
@@ -71,7 +71,6 @@ function Certification() {
                   title={cert.title}
                 ></iframe>
               </div>
-
               <h3 className="text-xl font-semibold text-cyan-400 mb-2">
                 {cert.title}
               </h3>
