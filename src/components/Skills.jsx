@@ -12,7 +12,7 @@ function Skills() {
     { name: "Express JS", level: 30 },
     { name: "Python Flask", level: 45 },
     { name: "Kali Linux OS", level: 70 },
-    { name: "Windows", level: 80 },
+    { name: "Windows", level: 90 },
     { name: "Ubuntu Live Server", level: 70 },
   ];
 
