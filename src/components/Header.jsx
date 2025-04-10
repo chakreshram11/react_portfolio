@@ -59,7 +59,7 @@ function Header() {
       </div>
 
       {/* Slide-in and Slide-out Animation Styles */}
-      <style jsx>{`
+      <style jsx="true" >{`
         @keyframes slideIn {
           0% {
             transform: translateX(-100%);

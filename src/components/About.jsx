@@ -2,26 +2,60 @@ import React from "react";
 
 function About() {
   return (
-    <section id="about" className="px-4 md:px-12 lg:px-16 py-20 bg-gray-800 text-center">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="text-4xl font-extrabold text-cyan-400 mb-6">About Me</h2>
-        <p className="text-lg text-gray-300 leading-relaxed">
-          I am a dedicated and passionate individual who completed my diploma in 2023, with a strong focus on
-          Cybersecurity and Full Stack Development. My technical expertise includes proficiency in languages
-          and frameworks such as HTML, CSS, Java, JavaScript, Python, React JS, Node JS, Express JS, Python Flask,
-          and Kali Linux OS. I continuously strive to enhance my skills in developing secure, efficient, and scalable applications.
-        </p>
-        <p className="mt-6 text-lg text-gray-300 leading-relaxed">
-          I have successfully completed a three-month internship in Full Stack Development, equipping me with hands-on
-          experience in both frontend and backend technologies. Additionally, I have earned certifications in Cyber Security
-          Awareness Training (Amazon), Introduction to Artificial Intelligence (Great Learning), Excel for Beginners (Great Learning),
-          Zscaler Networking Virtual Internship (AICTE Platform), and Palo Alto Cybersecurity Virtual Internship (AICTE Platform).
-        </p>
-        <p className="mt-6 text-lg text-gray-300 leading-relaxed">
-          Apart from coding and cybersecurity, I have a strong interest in photo and video editing, utilizing tools such as Photoshop
-          to enhance my creativity and design skills. My short-term goal is to secure a job in cybersecurity, while my long-term aspiration
-          is to achieve a high-paying position in the field, continuously learning and growing as a professional.
-        </p>
+    <section id="about" className="flex justify-center items-center min-h-screen bg-gray-800 p-6">
+      <div className="w-full max-w-4xl border border-gray-700 rounded-lg bg-gray-900 text-green-400 font-mono shadow-lg">
+        {/* Terminal Header */}
+        <div className="flex items-center px-4 py-2 bg-gray-800 border-b border-gray-700 rounded-t-lg">
+          <div className="flex space-x-2">
+            <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+            <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+          </div>
+          <span className="ml-auto text-gray-400 text-sm">About Me — bash</span>
+        </div>
+
+        {/* Terminal Content */}
+        <div className="p-6">
+          <p className="text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ whoami
+          </p>
+          <p className="ml-6 text-gray-300">
+            I am a dedicated cybersecurity and full-stack development enthusiast. I completed my diploma in 2023 and have a strong focus on developing secure and scalable applications.
+          </p>
+
+          <p className="mt-4 text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ skills --list
+          </p>
+          <p className="ml-6 text-gray-300">
+            - HTML, CSS, JavaScript, Python, React, Node.js, Express.js, Flask, Kali Linux
+            <br />
+            - Cybersecurity, Network Security, Ethical Hacking, Cryptography
+          </p>
+
+          <p className="mt-4 text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ cat certifications.txt
+          </p>
+          <p className="ml-6 text-gray-300">
+            - Cyber Security Awareness Training (Amazon)
+            <br />
+            - Introduction to AI (Great Learning)
+            <br />
+            - Zscaler Networking Virtual Internship (AICTE)
+            <br />
+            - Palo Alto Cybersecurity Virtual Internship (AICTE)
+          </p>
+
+          <p className="mt-4 text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ echo "Future Goals"
+          </p>
+          <p className="ml-6 text-gray-300">
+            My short-term goal is to secure a job in cybersecurity. Long-term, I aspire to attain a high-paying position in the field while continuously learning and growing.
+          </p>
+
+          <p className="mt-4 text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ _
+          </p>
+        </div>
       </div>
     </section>
   );

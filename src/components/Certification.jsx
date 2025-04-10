@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-// Import PDFs from the local folder
-import CyberSecurityPDF from "../certificates/cybersecurityamazon.pdf";
-import AIcertificatePDF from "../certificates/ai.pdf";
-import ExcelCertificatePDF from "../certificates/excel.pdf";
-import ZscalerPDF from "../certificates/zscaler.pdf";
-import PaloAltoPDF from "../certificates/paloalto.pdf";
+// Import certificate images
+import CyberSecurityPNG from "../certificates/cybersecurityamazon.png";
+import AIcertificatePNG from "../certificates/ai.png";
+import ExcelCertificatePNG from "../certificates/excel.png";
+import ZscalerPNG from "../certificates/zscaler.png";
+import PaloAltoPNG from "../certificates/paloalto.png";
 
 // Sample Certification Data
 const certifications = [
@@ -13,35 +13,37 @@ const certifications = [
     title: "Cyber Security Awareness Training",
     organization: "Amazon",
     date: "Nov 2021",
-    link: CyberSecurityPDF,
+    image: CyberSecurityPNG,
   },
   {
     title: "Introduction to Artificial Intelligence",
     organization: "Great Learning",
     date: "Nov 2021",
-    link: AIcertificatePDF,
+    image: AIcertificatePNG,
   },
   {
     title: "Excel for Beginners",
     organization: "Great Learning",
     date: "Nov 2021",
-    link: ExcelCertificatePDF,
+    image: ExcelCertificatePNG,
   },
   {
     title: "Zscaler Networking Virtual Internship",
     organization: "AICTE Platform",
     date: "Dec 2024",
-    link: ZscalerPDF,
+    image: ZscalerPNG,
   },
   {
     title: "Palo Alto Cybersecurity Virtual Internship",
     organization: "AICTE Platform",
     date: "Mar 2025",
-    link: PaloAltoPDF,
+    image: PaloAltoPNG,
   },
 ];
 
 function Certification() {
+  const [selectedCert, setSelectedCert] = useState(null);
+
   return (
     <section
       id="certifications"
@@ -52,8 +54,7 @@ function Certification() {
           My Certifications
         </h2>
         <p className="text-lg sm:text-xl text-gray-300 mb-12">
-          Here are some of my certifications showcasing my expertise and
-          continuous learning.
+          Here are some of my certifications showcasing my expertise and continuous learning.
         </p>
 
         {/* Certification List */}
@@ -61,37 +62,70 @@ function Certification() {
           {certifications.map((cert, index) => (
             <div
               key={index}
-              className="bg-gray-900 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700"
+              onClick={() => setSelectedCert(cert)}
+              className="bg-gray-900 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700 cursor-pointer transform hover:translate-y-1"
             >
-              {/* Embedded PDF Viewer */}
+              {/* Display certificate image */}
               <div className="mb-4">
-                <iframe
-                  src={cert.link}
-                  className="w-full h-56 rounded-lg shadow-md border border-cyan-500"
-                  title={cert.title}
-                ></iframe>
+                <img
+                  src={cert.image}
+                  alt={cert.title}
+                  className="w-full h-auto rounded-lg shadow-md border border-cyan-500"
+                />
               </div>
-              <h3 className="text-xl font-semibold text-cyan-400 mb-2">
-                {cert.title}
-              </h3>
+
+              <h3 className="text-xl font-semibold text-cyan-400 mb-2">{cert.title}</h3>
               <p className="text-md text-gray-400 mb-2">
                 <strong>Issued by:</strong> {cert.organization}
               </p>
               <p className="text-md text-gray-400 mb-4">
                 <strong>Date:</strong> {cert.date}
               </p>
-              <a
-                href={cert.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-lg font-semibold text-md transition-all duration-300 inline-block"
-              >
-                View Certificate
-              </a>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Modal for viewing certificate */}
+      {selectedCert && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+          <div className="relative bg-gray-900 p-6 rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-auto">
+            {/* Close button (fixed at top-right corner) */}
+            <button
+              onClick={() => setSelectedCert(null)}
+              className="absolute top-4 right-4 text-white text-4xl font-bold hover:text-red-500 transition-all duration-300"
+            >
+              &times;
+            </button>
+
+            {/* Certificate Image (Responsive) */}
+            <div className="flex justify-center mb-6">
+              <img
+                src={selectedCert.image}
+                alt={selectedCert.title}
+                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-xl border border-cyan-600"
+              />
+            </div>
+
+            {/* Certificate Details */}
+            <div className="text-center">
+              <h3 className="text-2xl font-semibold text-cyan-400">{selectedCert.title}</h3>
+              <p className="text-lg text-gray-300">
+                <strong>Issued by:</strong> {selectedCert.organization}
+              </p>
+              <p className="text-lg text-gray-300 mb-4">
+                <strong>Date:</strong> {selectedCert.date}
+              </p>
+              <button
+                onClick={() => setSelectedCert(null)}
+                className="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-6 rounded-lg transition-all duration-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

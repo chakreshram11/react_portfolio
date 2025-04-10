@@ -12,27 +12,48 @@ function Skills() {
     { name: "Express JS", level: 30 },
     { name: "Python Flask", level: 45 },
     { name: "Kali Linux OS", level: 70 },
-    { name: "Windos", level: 80 },
+    { name: "Windows", level: 80 },
     { name: "Ubuntu Live Server", level: 70 },
   ];
 
   return (
-    <section id="skills" className="py-20 bg-gray-900 text-center">
-      <div className="container mx-auto px-6 max-w-5xl">
-        <h2 className="text-4xl font-extrabold text-cyan-400 mb-12">Skill Set</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {skills.map((skill) => (
-            <div key={skill.name} className="bg-gray-800 p-5 rounded-lg shadow-lg">
-              <h3 className="text-lg font-semibold text-white mb-2">{skill.name}</h3>
-              <div className="relative w-full h-3 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-cyan-400 transition-all duration-500 ease-in-out"
-                  style={{ width: `${skill.level}%` }}
-                ></div>
+    <section id="skills" className="flex justify-center items-center min-h-screen bg-gray-900 p-6">
+      <div className="w-full max-w-6xl bg-gray-900 text-green-400 font-mono shadow-lg">
+        {/* Terminal Header */}
+        <div className="flex items-center px-4 py-2 bg-gray-800 border-b border-gray-700 rounded-t-lg">
+          <div className="flex space-x-2">
+            <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+            <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+          </div>
+          <span className="ml-auto text-gray-400 text-sm">Skill Set — bash</span>
+        </div>
+
+        {/* Terminal Content */}
+        <div className="p-6">
+          <p className="text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ ./show_skills.sh
+          </p>
+
+          {/* Skills Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+            {skills.map((skill) => (
+              <div key={skill.name} className="bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-xl transition-all duration-300">
+                <p className="text-gray-300">{skill.name}</p>
+                <div className="relative w-full bg-gray-700 h-4 rounded-lg overflow-hidden shadow-md">
+                  <div
+                    className="h-full bg-cyan-400 transition-all duration-700 ease-in-out"
+                    style={{ width: `${skill.level}%` }}
+                  ></div>
+                </div>
+                <p className="text-yellow-400 text-sm mt-1">{skill.level}%</p>
               </div>
-              <span className="text-sm font-medium text-cyan-400 mt-2 inline-block">{skill.level}%</span>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <p className="mt-6 text-lg">
+            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ _
+          </p>
         </div>
       </div>
     </section>
