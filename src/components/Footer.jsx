@@ -65,7 +65,7 @@ function Footer() {
           <h3 className="text-lg font-bold mb-4">Follow Me</h3>
           <div className="flex justify-center sm:justify-start space-x-6 mt-6">
             <a
-              href="https://www.facebook.com"
+              href="https://www.facebook.com/chakresh.ram.1/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:text-cyan-500 text-3xl transition-transform transform hover:scale-110"
