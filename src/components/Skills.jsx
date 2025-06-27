@@ -14,6 +14,7 @@ function Skills() {
     { name: "Kali Linux OS", level: 70 },
     { name: "Windows", level: 90 },
     { name: "Ubuntu Live Server", level: 70 },
+    { name: "Firebase", level: 40 },
   ];
 
   return (

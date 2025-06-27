@@ -9,10 +9,10 @@ function Home() {
   // Memoized phrases array to avoid unnecessary re-renders
   const phrases = useMemo(
     () => [
-      "Frontend Developer",
-      "React Enthusiast",
-      "Web Designer",
+      "Full Stack Developer",
       "Cyber Security Student",
+      "Adobe Photoshop Editor",
+      "Cyber Security Enthusiast",
     ],
     []
   );
