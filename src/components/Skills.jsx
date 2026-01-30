@@ -49,16 +49,37 @@ function Skills() {
           </div>
 
           <aside className="bg-[#061122] rounded-xl p-6 shadow-lg border border-indigo-900/20">
-            <h4 className="text-cyan-300 font-semibold">Security Highlights</h4>
-            <ul className="mt-4 space-y-3 text-slate-400 text-sm">
-              <li>Certifications: OSCP, CEH (placeholder)</li>
-              <li>Experience with red team assessments & hardened infrastructure</li>
-              <li>Strong fundamentals in network protocols, cryptography, and incident response</li>
-            </ul>
-            <div className="mt-6">
-              <a href="#contact" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md">Hire Me for Security Work</a>
-            </div>
-          </aside>
+  <h4 className="text-cyan-300 font-semibold">Security Research</h4>
+
+  <ul className="mt-4 space-y-4 text-slate-400 text-sm list-disc list-inside">
+    <li>
+      <span className="font-medium text-slate-300">
+        Information Disclosure Vulnerability (Feb 2025):
+      </span>{" "}
+      Identified improper access control that exposed sensitive institutional
+      data and recommended secure access controls, validation, and regular
+      security audits.
+    </li>
+
+    <li>
+      <span className="font-medium text-slate-300">
+        FTP Misconfiguration Vulnerability (Feb 2025):
+      </span>{" "}
+      Discovered anonymous FTP access exposing confidential files and suggested
+      strong authentication mechanisms and secure server configuration.
+    </li>
+  </ul>
+
+  <div className="mt-6">
+    <a
+      href="#contact"
+      className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md transition-colors"
+    >
+      Contact for Security Research
+    </a>
+  </div>
+</aside>
+
         </div>
       </div>
     </section>
