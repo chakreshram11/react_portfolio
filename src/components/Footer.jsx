@@ -52,6 +52,22 @@ function Footer() {
             </li>
             <li>
               <a
+                href="#projects"
+                className="hover:text-cyan-400 transition-colors duration-300"
+              >
+                Projects
+              </a>
+            </li>
+            <li>
+              <a
+                href="#experience"
+                className="hover:text-cyan-400 transition-colors duration-300"
+              >
+                Experience
+              </a>
+            </li>
+            <li>
+              <a
                 href="#contact"
                 className="hover:text-cyan-400 transition-colors duration-300"
               >
