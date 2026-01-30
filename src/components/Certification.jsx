@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-
 // Import certificate images
 import CyberSecurityPNG from "../certificates/cybersecurityamazon.png";
 import AIcertificatePNG from "../certificates/ai.png";
 import ExcelCertificatePNG from "../certificates/excel.png";
 import ZscalerPNG from "../certificates/zscaler.png";
 import PaloAltoPNG from "../certificates/paloalto.png";
+import Fortinet from "../certificates/Fortinet Network security Associate Virtual Internship_page-0001.jpg"
+import Nptel from "../certificates/NPTEL-IOT.jpg"
+import OS_Basics from "../certificates/OperatingSystemsBasics-cisco_page-0001.jpg"
+// import Zero_Trust from "../certificates/zero trust cloud security virtual internship_page-0001.jpg"
 
 // Sample Certification Data
 const certifications = [
@@ -39,6 +42,30 @@ const certifications = [
     date: "Mar 2025",
     image: PaloAltoPNG,
   },
+  {
+    title: "Fortinet Network Security Associate",
+    organization: "AICTE Platform",
+    date: "Aug 2025",
+    image: Fortinet, 
+  },
+  {
+    title: "IOT",
+    organization: "Swayam NPTEL",
+    date: "May 2025",
+    image: Nptel,
+  },
+  {
+    title: "Operating System Basics",
+    organization: "CISCO",
+    date: "Oct 2024",
+    image: OS_Basics,
+  },
+  // {
+  //   title: "Zero Trust Cloud Security Virtual Internship",
+  //   organization: "AICTE Platform",
+  //   date: "Jun 2025",
+  //   image: Zero_Trust,
+  // },
 ];
 
 function Certification() {

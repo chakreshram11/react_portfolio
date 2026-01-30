@@ -18,43 +18,47 @@ function Skills() {
   ];
 
   return (
-    <section id="skills" className="flex justify-center items-center min-h-screen bg-gray-900 p-6">
-      <div className="w-full max-w-6xl bg-gray-900 text-green-400 font-mono shadow-lg">
-        {/* Terminal Header */}
-        <div className="flex items-center px-4 py-2 bg-gray-800 border-b border-gray-700 rounded-t-lg">
-          <div className="flex space-x-2">
-            <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-            <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-          </div>
-          <span className="ml-auto text-gray-400 text-sm">Skill Set — bash</span>
+    <section id="skills" className="min-h-screen bg-gradient-to-b bg-gray-900 via-[#071019] to-[#0d1220] py-20 text-slate-200">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl font-bold text-cyan-400">Skills</h2>
+          <p className="text-slate-400 mt-2">Security-focused skillset — frontend, backend & platforms.</p>
         </div>
 
-        {/* Terminal Content */}
-        <div className="p-6">
-          <p className="text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ ./show_skills.sh
-          </p>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 bg-[#061122] rounded-xl p-6 shadow-lg border border-cyan-900/10">
+            <div className="grid sm:grid-cols-2 gap-4">
+              {skills.map((skill) => (
+                <div key={skill.name} className="bg-gradient-to-r from-[#061422] to-[#08182a] p-4 rounded-lg border border-cyan-900/20 hover:shadow-[0_10px_30px_rgba(8,145,178,0.08)] transition-all">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-slate-200">{skill.name}</p>
+                    </div>
+                    <div className="text-sm text-slate-400">{skill.level}%</div>
+                  </div>
 
-          {/* Skills Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
-            {skills.map((skill) => (
-              <div key={skill.name} className="bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-xl transition-all duration-300">
-                <p className="text-gray-300">{skill.name}</p>
-                <div className="relative w-full bg-gray-700 h-4 rounded-lg overflow-hidden shadow-md">
-                  <div
-                    className="h-full bg-cyan-400 transition-all duration-700 ease-in-out"
-                    style={{ width: `${skill.level}%` }}
-                  ></div>
+                  <div className="mt-3 h-3 w-full bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${skill.level}%`, background: 'linear-gradient(90deg,#06b6d4,#7c3aed)' }}
+                    />
+                  </div>
                 </div>
-                <p className="text-yellow-400 text-sm mt-1">{skill.level}%</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <p className="mt-6 text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ _
-          </p>
+          <aside className="bg-[#061122] rounded-xl p-6 shadow-lg border border-indigo-900/20">
+            <h4 className="text-cyan-300 font-semibold">Security Highlights</h4>
+            <ul className="mt-4 space-y-3 text-slate-400 text-sm">
+              <li>Certifications: OSCP, CEH (placeholder)</li>
+              <li>Experience with red team assessments & hardened infrastructure</li>
+              <li>Strong fundamentals in network protocols, cryptography, and incident response</li>
+            </ul>
+            <div className="mt-6">
+              <a href="#contact" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md">Hire Me for Security Work</a>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

@@ -43,7 +43,7 @@ function Header() {
           }`}
         >
           <ul className="flex flex-col md:flex-row text-white text-center md:space-x-6">
-            {["home", "about", "skills", "certifications", "projects", "contact"].map((section) => (
+            {["home", "about", "skills", "certifications", "projects", "experience", "contact"].map((section) => (
               <li key={section}>
                 <a
                   href={`#${section}`}

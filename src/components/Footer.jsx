@@ -1,9 +1,10 @@
 import React from "react";
 import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
 
+
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12 mt-16">
+    <footer className="bg-gray-800 text-white py-12 mt-16">
       <div className="container mx-auto px-4 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
         {/* About Section */}
         <div className="text-center sm:text-left">

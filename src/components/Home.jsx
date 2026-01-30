@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Photo from "../asserts/photo.png";
-import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
+import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaFilePdf } from "react-icons/fa";
+import resume from "../projects/single page resume.pdf";
 
 function Home() {
   const [typedText, setTypedText] = useState("");
@@ -92,9 +93,12 @@ function Home() {
           {/* Download CV Button */}
           <div className="flex justify-center md:justify-start mt-6">
             <a
-              href="#contact"
-              className="bg-cyan-400 hover:bg-cyan-500 text-black px-6 py-2 rounded-md font-semibold text-lg"
+              href={resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-500 text-black px-6 py-2 rounded-md font-semibold text-lg"
             >
+              <FaFilePdf className="text-lg" />
               Download CV
             </a>
           </div>
