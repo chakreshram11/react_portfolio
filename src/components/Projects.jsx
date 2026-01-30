@@ -22,7 +22,7 @@ function Projects() {
     },
     {
       id: 3,
-      title: "Project Three",
+      title: "Cyber Crew – Cybersecurity Club Website",
       img: cybercrew,
       doc: cybercrewPdf,
     },
