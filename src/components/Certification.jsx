@@ -74,7 +74,7 @@ function Certification() {
   return (
     <section
       id="certifications"
-      className="bg-gray-800 text-white py-16 px-6 sm:px-12 lg:px-24"
+      className="bg-gray-900 text-white py-16 px-6 sm:px-12 lg:px-24"
     >
       <div className="container mx-auto text-center">
         <h2 className="text-4xl sm:text-5xl font-extrabold text-cyan-400 mb-8 tracking-wide">
@@ -90,7 +90,7 @@ function Certification() {
             <div
               key={index}
               onClick={() => setSelectedCert(cert)}
-              className="bg-gray-900 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700 cursor-pointer transform hover:translate-y-1"
+              className="bg-gray-800 bg-opacity-80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 relative border border-gray-700 cursor-pointer transform hover:translate-y-1"
             >
               {/* Display certificate image */}
               <div className="mb-4">
@@ -116,7 +116,7 @@ function Certification() {
       {/* Modal for viewing certificate */}
       {selectedCert && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-          <div className="relative bg-gray-900 p-6 rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-auto">
+          <div className="relative bg-gray-800 p-6 rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-auto">
             {/* Close button (fixed at top-right corner) */}
             <button
               onClick={() => setSelectedCert(null)}
