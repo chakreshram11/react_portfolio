@@ -36,7 +36,7 @@ function Home() {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center bg-gray-900 text-center px-4 md:px-14 lg:px-16"
+      className="min-h-screen flex items-center justify-center bg-gray-800 text-center px-4 md:px-14 lg:px-16"
     >
       {/* Responsive container: Image on top in mobile, side-by-side in desktop */}
       <div className="container mx-auto flex flex-col-reverse md:flex-row items-center gap-8 md:gap-12">

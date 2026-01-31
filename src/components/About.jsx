@@ -2,7 +2,7 @@ import React from "react";
 
 function About() {
   return (
-    <section id="about" className="flex justify-center items-center min-h-screen bg-gray-800 p-6">
+    <section id="about" className="flex justify-center items-center min-h-screen bg-gray-900 p-6">
       <div className="w-full max-w-4xl border border-gray-700 rounded-lg bg-gray-900 text-green-400 font-mono shadow-lg">
         {/* Terminal Header */}
         <div className="flex items-center px-4 py-2 bg-gray-800 border-b border-gray-700 rounded-t-lg">

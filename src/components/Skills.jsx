@@ -18,7 +18,7 @@ function Skills() {
   ];
 
   return (
-    <section id="skills" className="min-h-screen bg-gradient-to-b bg-gray-900 via-[#071019] to-[#0d1220] py-20 text-slate-200">
+    <section id="skills" className="min-h-screen bg-gradient-to-b bg-gray-800 via-[#071019] to-[#0d1220] py-20 text-slate-200">
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="mb-8 text-center">
           <h2 className="text-4xl font-bold text-cyan-400">Skills</h2>
