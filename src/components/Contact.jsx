@@ -2,7 +2,7 @@ import React from "react";
 
 function Contact() {
   return (
-    <section id="contact" className="py-20 bg-gray-900 text-white">
+    <section id="contact" className="py-20 bg-gray-800 text-white">
       <div className="container mx-auto px-6">
         {/* Section Title */}
         <h2 className="text-4xl font-extrabold text-center text-cyan-400 mb-8">
@@ -27,7 +27,7 @@ function Contact() {
             name="name"
             placeholder="Full Name"
             required
-            className="p-4 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
+            className="p-4 bg-gray-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
           />
 
           {/* Email Address */}
@@ -36,7 +36,7 @@ function Contact() {
             name="email"
             placeholder="Email Address"
             required
-            className="p-4 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
+            className="p-4 bg-gray-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
           />
 
           {/* Mobile Number */}
@@ -44,7 +44,7 @@ function Contact() {
             type="text"
             name="phone"
             placeholder="Mobile Number"
-            className="p-4 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
+            className="p-4 bg-gray-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
           />
 
           {/* Email Subject */}
@@ -52,7 +52,7 @@ function Contact() {
             type="text"
             name="subject"
             placeholder="Email Subject"
-            className="p-4 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
+            className="p-4 bg-gray-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
           />
 
           {/* Message */}
@@ -61,7 +61,7 @@ function Contact() {
             placeholder="Your Message"
             rows="4"
             required
-            className="col-span-1 md:col-span-2 p-4 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
+            className="col-span-1 md:col-span-2 p-4 bg-gray-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent transition-all"
           ></textarea>
 
           {/* Submit Button */}
