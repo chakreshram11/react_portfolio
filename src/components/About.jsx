@@ -1,60 +1,213 @@
 import React from "react";
+import { FaShieldAlt, FaCode, FaCertificate, FaBriefcase, FaRocket, FaGraduationCap, FaQuoteLeft } from "react-icons/fa";
 
 function About() {
+  const techStack = [
+    { name: "React", color: "#61dafb" },
+    { name: "JavaScript", color: "#f7df1e" },
+    { name: "Python", color: "#3776ab" },
+    { name: "Node.js", color: "#68a063" },
+    { name: "HTML", color: "#e34f26" },
+    { name: "CSS", color: "#264de4" },
+    { name: "Flask", color: "#ffffff" },
+    { name: "Firebase", color: "#ffca28" },
+    { name: "Kali Linux", color: "#557c94" },
+    { name: "Java", color: "#ed8b00" },
+    { name: "Express", color: "#ffffff" },
+    { name: "Tailwind", color: "#38bdf8" },
+  ];
+
+  const stats = [
+    { icon: FaBriefcase, value: "3+", label: "Internships", color: "#38bdf8" },
+    { icon: FaCertificate, value: "8+", label: "Certifications", color: "#818cf8" },
+    { icon: FaCode, value: "3+", label: "Projects", color: "#34d399" },
+    { icon: FaShieldAlt, value: "2", label: "Vulns Found", color: "#fb923c" },
+  ];
+
   return (
-    <section id="about" className="flex justify-center items-center min-h-screen bg-gray-900 p-6">
-      <div className="w-full max-w-4xl border border-gray-700 rounded-lg bg-gray-900 text-green-400 font-mono shadow-lg">
-        {/* Terminal Header */}
-        <div className="flex items-center px-4 py-2 bg-gray-800 border-b border-gray-700 rounded-t-lg">
-          <div className="flex space-x-2">
-            <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-            <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-          </div>
-          <span className="ml-auto text-gray-400 text-sm">About Me — bash</span>
+    <section id="about" className="py-20 px-6 md:px-14 relative overflow-x-hidden" style={{ background: '#030712' }}>
+
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-sky-500/10 rounded-full blur-[100px] mix-blend-screen" />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-indigo-500/10 rounded-full blur-[100px] mix-blend-screen" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-16">
+          <p className="text-sm font-bold tracking-[0.2em] text-slate-500 uppercase mb-3">Get to know me</p>
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+            About <span className="accent-gradient-text">Me</span>
+          </h2>
+          <div className="mt-8 w-20 h-1 mx-auto accent-gradient rounded-full opacity-80" />
         </div>
 
-        {/* Terminal Content */}
-        <div className="p-6">
-          <p className="text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ whoami
-          </p>
-          <p className="ml-6 text-gray-300">
-            I am a dedicated cybersecurity and full-stack development enthusiast. I completed my diploma in 2023 and have a strong focus on developing secure and scalable applications.
-          </p>
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
 
-          <p className="mt-4 text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ skills --list
-          </p>
-          <p className="ml-6 text-gray-300">
-            - HTML, CSS, JavaScript, Python, React, Node.js, Express.js, Flask, Kali Linux
-            <br />
-            - Cybersecurity, Network Security, Ethical Hacking, Cryptography
-          </p>
+          {/* Bio Card - Large */}
+          <div className="md:col-span-7 glass-card rounded-2xl p-8 sm:p-10 relative overflow-hidden group hover:border-white/10 transition-all duration-500">
+            {/* Inner Glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/4 group-hover:bg-sky-500/20 transition-all duration-700" />
 
-          <p className="mt-4 text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ cat certifications.txt
-          </p>
-          <p className="ml-6 text-gray-300">
-            - Cyber Security Awareness Training (Amazon)
-            <br />
-            - Introduction to AI (Great Learning)
-            <br />
-            - Zscaler Networking Virtual Internship (AICTE)
-            <br />
-            - Palo Alto Cybersecurity Virtual Internship (AICTE)
-          </p>
+            <FaQuoteLeft className="absolute right-8 bottom-8 text-8xl text-white/[0.02] -rotate-12 pointer-events-none" />
 
-          <p className="mt-4 text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ echo "Future Goals"
-          </p>
-          <p className="ml-6 text-gray-300">
-            My short-term goal is to secure a job in cybersecurity. Long-term, I aspire to attain a high-paying position in the field while continuously learning and growing.
-          </p>
+            <div className="flex items-center gap-4 mb-6 relative z-10">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center border border-sky-500/20 shadow-[inset_0_0_15px_rgba(56,189,248,0.15)] bg-sky-500/10">
+                <FaGraduationCap className="text-xl text-sky-400" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white tracking-wide">Who I Am</h3>
+                <p className="text-xs text-sky-400 uppercase tracking-widest font-semibold mt-1.5">B.Tech (2026) — Cyber Security</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-1">Diploma (2023) — Computer Engineering</p>
+              </div>
+            </div>
 
-          <p className="mt-4 text-lg">
-            <span className="text-cyan-400">guest@cyberworld</span>:<span className="text-yellow-400">~</span>$ _
-          </p>
+            <p className="text-slate-300 leading-relaxed text-base relative z-10 mb-8">
+              I am a dedicated <span className="text-white font-bold bg-white/5 px-1.5 py-0.5 rounded">cybersecurity</span> and{" "}
+              <span className="text-white font-bold bg-white/5 px-1.5 py-0.5 rounded">full-stack development</span> enthusiast
+              with a strong focus on building secure, scalable applications. I thrive at
+              the intersection of development and security — writing code that's
+              resilient by design.
+            </p>
+
+            <div className="flex flex-wrap gap-3 relative z-10">
+              <span className="text-xs font-bold px-4 py-2 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-[0_0_10px_rgba(56,189,248,0.1)]">Full Stack Dev</span>
+              <span className="text-xs font-bold px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-[0_0_10px_rgba(129,140,248,0.1)]">Cyber Security</span>
+              <span className="text-xs font-bold px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]">Ethical Hacking</span>
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="md:col-span-5 grid grid-cols-2 gap-4 sm:gap-6">
+            {stats.map((stat, i) => (
+              <div
+                key={i}
+                className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center group hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-300 border border-white/5 hover:border-white/10 relative overflow-hidden"
+              >
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                  style={{ background: `radial-gradient(circle at center, ${stat.color}, transparent 70%)` }}
+                />
+
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-500 group-hover:-translate-y-1 group-hover:rotate-6 border border-white/5 relative z-10"
+                  style={{ background: `${stat.color}15`, boxShadow: `inset 0 0 15px ${stat.color}20` }}
+                >
+                  <stat.icon className="text-xl" style={{ color: stat.color }} />
+                </div>
+                <span className="text-3xl font-black text-white relative z-10 tracking-tight">{stat.value}</span>
+                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-2 relative z-10">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Terminal Card */}
+          <div className="md:col-span-8 rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-sky-500/20 group relative transition-all duration-500 hover:border-sky-500/40"
+            style={{ background: 'rgba(5, 9, 20, 0.9)' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="flex items-center px-5 py-3 border-b border-white/5 backdrop-blur-md"
+              style={{ background: 'rgba(17, 24, 39, 0.8)' }}
+            >
+              <div className="flex space-x-2">
+                <span className="w-3 h-3 bg-red-500 rounded-full shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
+                <span className="w-3 h-3 bg-yellow-500 rounded-full shadow-[0_0_5px_rgba(234,179,8,0.5)]" />
+                <span className="w-3 h-3 bg-green-500 rounded-full shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
+              </div>
+              <span className="ml-auto text-slate-400 text-xs font-mono font-semibold tracking-widest flex items-center gap-2">
+                <FaCode className="text-sky-500" /> about-me.sh
+              </span>
+            </div>
+
+            <div className="p-8 font-mono text-sm space-y-6">
+              <div>
+                <p className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">guest@chakresh</span>
+                  <span className="text-slate-500">:</span>
+                  <span className="text-indigo-400 font-bold">~/portfolio</span>
+                  <span className="text-slate-500">$</span>
+                  <span className="text-sky-300">cat certifications.txt</span>
+                </p>
+                <div className="ml-6 mt-3 text-slate-400 space-y-2 border-l-2 border-slate-800 pl-4">
+                  <p className="hover:text-slate-300 transition-colors">Cyber Security Awareness Training <span className="text-slate-600 font-sans text-xs uppercase tracking-wider ml-2">— Amazon</span></p>
+                  <p className="hover:text-slate-300 transition-colors">Introduction to AI <span className="text-slate-600 font-sans text-xs uppercase tracking-wider ml-2">— Great Learning</span></p>
+                  <p className="hover:text-slate-300 transition-colors">Zscaler Networking Virtual Internship <span className="text-slate-600 font-sans text-xs uppercase tracking-wider ml-2">— AICTE</span></p>
+                  <p className="hover:text-slate-300 transition-colors">Palo Alto Cybersecurity Virtual Internship <span className="text-slate-600 font-sans text-xs uppercase tracking-wider ml-2">— AICTE</span></p>
+                </div>
+              </div>
+
+              <div>
+                <p className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">guest@chakresh</span>
+                  <span className="text-slate-500">:</span>
+                  <span className="text-indigo-400 font-bold">~/portfolio</span>
+                  <span className="text-slate-500">$</span>
+                  <span className="text-sky-300">echo $GOALS</span>
+                </p>
+                <p className="ml-6 mt-3 text-slate-300 leading-relaxed border-l-2 border-slate-800 pl-4">
+                  <span className="text-sky-400 font-bold">Short-term:</span> Secure a role in cybersecurity.<br/>
+                  <span className="text-indigo-400 font-bold">Long-term:</span> Grow into a senior security engineer while continuously learning.
+                </p>
+              </div>
+
+              <p className="flex items-center gap-2">
+                <span className="text-emerald-400 font-bold">guest@chakresh</span>
+                <span className="text-slate-500">:</span>
+                <span className="text-indigo-400 font-bold">~/portfolio</span>
+                <span className="text-slate-500">$</span>
+                <span className="w-2.5 h-5 bg-sky-400 animate-pulse inline-block align-middle" />
+              </p>
+            </div>
+          </div>
+
+          {/* Tech Stack Card */}
+          <div className="md:col-span-4 glass-card rounded-2xl p-8 relative overflow-hidden group hover:border-white/10 transition-all duration-500">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-[60px] pointer-events-none group-hover:bg-indigo-500/20 transition-all duration-700" />
+
+            <div className="flex items-center gap-4 mb-6 relative z-10">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center border border-indigo-500/20 shadow-[inset_0_0_15px_rgba(129,140,248,0.15)] bg-indigo-500/10">
+                <FaCode className="text-xl text-indigo-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white tracking-wide">Tech Stack</h3>
+            </div>
+
+            <div className="flex flex-wrap gap-2.5 relative z-10">
+              {techStack.map((tech, i) => (
+                <span
+                  key={i}
+                  className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all duration-300 hover:scale-105 cursor-default hover:shadow-[0_0_15px_currentColor]"
+                  style={{
+                    background: `${tech.color}15`,
+                    color: tech.color,
+                    border: `1px solid ${tech.color}30`,
+                  }}
+                >
+                  {tech.name}
+                </span>
+              ))}
+            </div>
+
+            {/* Mini Goals */}
+            <div className="mt-8 pt-6 relative z-10 border-t border-white/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20">
+                  <FaRocket className="text-emerald-400 text-sm" />
+                </div>
+                <h4 className="text-white font-bold text-sm tracking-wide">Current Focus</h4>
+              </div>
+              <div className="space-y-3 pl-1">
+                {["Security Research", "Full Stack Projects", "Cloud Platforms"].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 group/item">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#34d399] group-hover/item:scale-150 transition-transform" />
+                    <span className="text-slate-400 text-xs font-medium uppercase tracking-wider group-hover/item:text-slate-200 transition-colors">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

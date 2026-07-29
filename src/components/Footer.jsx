@@ -1,123 +1,128 @@
 import React from "react";
-import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
-
+import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaHeart, FaArrowUp, FaCircle } from "react-icons/fa";
 
 function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  const handleSmoothScroll = (e, target) => {
+    e.preventDefault();
+    const section = document.querySelector(target);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <footer className="bg-gray-900 text-white py-12 mt-16">
-      <div className="container mx-auto px-4 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-        {/* About Section */}
-        <div className="text-center sm:text-left">
-          <h3 className="text-2xl font-bold mb-4 text-cyan-400">Portfolio.</h3>
-          <p className="text-sm sm:text-base">
-            A portfolio website showcasing my projects, skills, and services. I aim to build impactful, user-friendly web applications.
+    <footer className="relative pt-24 pb-10 overflow-x-hidden" style={{ background: '#030712' }}>
+
+      {/* Massive Faded Watermark Background */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
+        <h1 className="text-[18vw] font-black text-white/[0.015] tracking-tighter whitespace-nowrap">
+          CHAKRESH
+        </h1>
+      </div>
+
+      {/* Animated Top Border Line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-white/5" />
+      <div className="absolute top-0 left-0 w-1/3 h-[2px] bg-gradient-to-r from-transparent via-sky-500 to-transparent animate-shimmer" style={{ animationDuration: '3s' }} />
+
+      {/* Ambient Glows */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-500/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-14 relative z-10 grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
+
+        {/* Brand & Description */}
+        <div className="md:col-span-5 text-center md:text-left flex flex-col items-center md:items-start">
+          <div
+            className="text-4xl font-black tracking-tighter mb-4 cursor-pointer inline-block group"
+            onClick={scrollToTop}
+          >
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 transition-all duration-300 group-hover:to-white">Chakresh</span>
+            <span className="text-sky-400 group-hover:text-emerald-400 transition-colors duration-300 drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]">.</span>
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6 backdrop-blur-md">
+            <FaCircle className="text-[8px] text-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Available for Opportunities</span>
+          </div>
+
+          <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
+            Bridging the gap between robust cybersecurity practices and scalable full-stack development. Let's build something secure and beautiful.
           </p>
         </div>
 
-        {/* Navigation Links */}
-        <div className="text-center sm:text-left">
-          <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-          <ul className="space-y-2">
-            <li>
-              <a
-                href="#home"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                Home
-              </a>
-            </li>
-            <li>
-              <a
-                href="#about"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                href="#skills"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                Skills
-              </a>
-            </li>
-            <li>
-              <a
-                href="#certifications"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                Certifications
-              </a>
-            </li>
-            <li>
-              <a
-                href="#projects"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                Projects
-              </a>
-            </li>
-            <li>
-              <a
-                href="#experience"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                Experience
-              </a>
-            </li>
-            <li>
-              <a
-                href="#contact"
-                className="hover:text-cyan-400 transition-colors duration-300"
-              >
-                Contact
-              </a>
-            </li>
+        {/* Navigation */}
+        <div className="md:col-span-3 text-center md:text-left flex flex-col md:items-start items-center">
+          <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em] mb-6">Explore</h3>
+          <ul className="space-y-4">
+            {["Home", "About", "Skills", "Experience", "Projects", "Certifications"].map((link) => (
+              <li key={link}>
+                <a
+                  href={`#${link.toLowerCase()}`}
+                  onClick={(e) => handleSmoothScroll(e, `#${link.toLowerCase()}`)}
+                  className="group flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-sky-400 transition-all duration-300"
+                >
+                  <span className="w-0 h-0.5 bg-sky-400 transition-all duration-300 group-hover:w-3" />
+                  {link}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Social Media Section */}
-        <div className="text-center sm:text-left">
-          <h3 className="text-lg font-bold mb-4">Follow Me</h3>
-          <div className="flex justify-center sm:justify-start space-x-6 mt-6">
-            <a
-              href="https://www.facebook.com/chakresh.ram.1/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cyan-400 hover:text-cyan-500 text-3xl transition-transform transform hover:scale-110"
-            >
-              <FaFacebook />
-            </a>
-            <a
-              href="https://www.linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cyan-400 hover:text-cyan-500 text-3xl transition-transform transform hover:scale-110"
-            >
-              <FaLinkedin />
-            </a>
-            <a
-              href="https://www.instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cyan-400 hover:text-cyan-500 text-3xl transition-transform transform hover:scale-110"
-            >
-              <FaInstagram />
-            </a>
-            <a
-              href="mailto:chakreshram05@gmail.com"
-              className="text-cyan-400 hover:text-cyan-500 text-3xl transition-transform transform hover:scale-110"
-            >
-              <FaEnvelope />
-            </a>
+        {/* Socials & Connect */}
+        <div className="md:col-span-4 text-center md:text-left flex flex-col md:items-start items-center">
+          <h3 className="text-xs font-bold text-white uppercase tracking-[0.2em] mb-6">Connect</h3>
+          <p className="text-sm text-slate-400 mb-6 max-w-xs leading-relaxed">
+            Reach out for collaborations, security audits, or just a friendly chat.
+          </p>
+          <div className="flex gap-4">
+            {[
+              { icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]" },
+              { icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:shadow-[0_0_20px_rgba(220,39,67,0.4)]" },
+              { icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2] hover:shadow-[0_0_20px_rgba(24,119,242,0.4)]" },
+              { icon: FaEnvelope, href: "mailto:chakreshram11@gmail.com", color: "hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]" },
+            ].map((social, i) => (
+               <a
+                key={i}
+                href={social.href}
+                target={social.href.startsWith("mailto") ? undefined : "_blank"}
+                rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+                className={`w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center text-slate-400 transition-all duration-300 hover:-translate-y-2 hover:text-white group ${social.color}`}
+              >
+                <social.icon className="text-lg transition-transform duration-300 group-hover:scale-110" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Copyright Section */}
-      <div className="mt-12 border-t border-gray-700 pt-4 text-center text-sm text-gray-400">
-        <p>&copy; {new Date().getFullYear()} Portfolio. All Rights Reserved.</p>
+      {/* Bottom Bar */}
+      <div className="max-w-7xl mx-auto px-6 md:px-14 mt-20 relative z-10">
+        <div className="border-t border-white/5 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+
+          <p className="text-xs font-semibold text-slate-500 tracking-wide">
+            &copy; {currentYear} Chakresh Ram Kudupudi. All Rights Reserved.
+          </p>
+
+          <p className="text-xs font-semibold text-slate-500 flex items-center gap-2">
+            Built with <FaHeart className="text-rose-500/80 animate-pulse" /> using React & Tailwind
+          </p>
+
+          {/* Back to top button */}
+          <button
+            onClick={scrollToTop}
+            className="group flex items-center justify-center w-10 h-10 rounded-xl bg-white/[0.02] border border-white/10 hover:bg-sky-500/10 hover:border-sky-500/30 transition-all duration-300"
+            aria-label="Back to top"
+          >
+            <FaArrowUp className="text-slate-400 group-hover:text-sky-400 group-hover:-translate-y-1 transition-all duration-300" />
+          </button>
+
+        </div>
       </div>
     </footer>
   );

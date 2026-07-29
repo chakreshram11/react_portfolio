@@ -11,7 +11,7 @@ import Experience from "./components/Experience";
 
 function App() {
   return (
-    <div className="bg-gray-900 text-white">
+    <div className="bg-dark-950 text-slate-200 antialiased">
       <Header />
       <Home />
       <About />
