@@ -59,13 +59,14 @@ function Contact() {
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Social Profiles</p>
                 <div className="flex gap-4">
                   {[
-                    { icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2]/20 hover:text-[#0A66C2] hover:border-[#0A66C2]/50" },
-                    { icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-[#E1306C]/20 hover:text-[#E1306C] hover:border-[#E1306C]/50" },
-                    { icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2]/20 hover:text-[#1877F2] hover:border-[#1877F2]/50" },
+                    { name: "LinkedIn", icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2]/20 hover:text-[#0A66C2] hover:border-[#0A66C2]/50" },
+                    { name: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-[#E1306C]/20 hover:text-[#E1306C] hover:border-[#E1306C]/50" },
+                    { name: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2]/20 hover:text-[#1877F2] hover:border-[#1877F2]/50" },
                   ].map((social, i) => (
                     <a
                       key={i}
                       href={social.href}
+                      aria-label={social.name}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`w-12 h-12 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-slate-400 shadow-inner transition-all duration-300 hover:-translate-y-1 ${social.color}`}
@@ -97,7 +98,7 @@ function Contact() {
                   <input
                     type="text"
                     name="name"
-                    placeholder="Full Name"
+                    placeholder="Full Name" aria-label="Full Name"
                     required
                     className="w-full px-5 py-4 rounded-xl bg-[#0a0f1e]/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500/50 focus:bg-[#0a0f1e] focus:ring-1 focus:ring-sky-500/50 transition-all duration-300 text-sm shadow-inner"
                   />
@@ -107,7 +108,7 @@ function Contact() {
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email Address"
+                    placeholder="Email Address" aria-label="Email Address"
                     required
                     className="w-full px-5 py-4 rounded-xl bg-[#0a0f1e]/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500/50 focus:bg-[#0a0f1e] focus:ring-1 focus:ring-sky-500/50 transition-all duration-300 text-sm shadow-inner"
                   />
@@ -117,7 +118,7 @@ function Contact() {
                   <input
                     type="text"
                     name="phone"
-                    placeholder="Mobile Number"
+                    placeholder="Mobile Number" aria-label="Mobile Number"
                     className="w-full px-5 py-4 rounded-xl bg-[#0a0f1e]/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500/50 focus:bg-[#0a0f1e] focus:ring-1 focus:ring-sky-500/50 transition-all duration-300 text-sm shadow-inner"
                   />
                 </div>
@@ -126,7 +127,7 @@ function Contact() {
                   <input
                     type="text"
                     name="subject"
-                    placeholder="Subject"
+                    placeholder="Subject" aria-label="Subject"
                     className="w-full px-5 py-4 rounded-xl bg-[#0a0f1e]/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500/50 focus:bg-[#0a0f1e] focus:ring-1 focus:ring-sky-500/50 transition-all duration-300 text-sm shadow-inner"
                   />
                 </div>
@@ -134,7 +135,7 @@ function Contact() {
                 <div className="md:col-span-2 group/input relative">
                   <textarea
                     name="message"
-                    placeholder="Your Message"
+                    placeholder="Your Message" aria-label="Your Message"
                     rows="5"
                     required
                     className="w-full px-5 py-4 rounded-xl bg-[#0a0f1e]/80 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500/50 focus:bg-[#0a0f1e] focus:ring-1 focus:ring-sky-500/50 transition-all duration-300 text-sm resize-none shadow-inner"

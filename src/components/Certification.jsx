@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import CyberSecurityPNG from "../certificates/cybersecurityamazon.png";
-import AIcertificatePNG from "../certificates/ai.png";
-import ExcelCertificatePNG from "../certificates/excel.png";
-import ZscalerPNG from "../certificates/zscaler.png";
-import PaloAltoPNG from "../certificates/paloalto.png";
-import Fortinet from "../certificates/Fortinet Network security Associate Virtual Internship_page-0001.jpg"
-import Nptel from "../certificates/NPTEL-IOT.jpg"
-import OS_Basics from "../certificates/OperatingSystemsBasics-cisco_page-0001.jpg"
+import CyberSecurityPNG from "../certificates/cybersecurityamazon.webp";
+import AIcertificatePNG from "../certificates/ai.webp";
+import ExcelCertificatePNG from "../certificates/excel.webp";
+import ZscalerPNG from "../certificates/zscaler.webp";
+import PaloAltoPNG from "../certificates/paloalto.webp";
+import Fortinet from "../certificates/Fortinet Network security Associate Virtual Internship_page-0001.webp"
+import Nptel from "../certificates/NPTEL-IOT.webp"
+import OS_Basics from "../certificates/OperatingSystemsBasics-cisco_page-0001.webp"
 import { FaSearchPlus, FaTimes, FaAward, FaCalendarAlt, FaBuilding } from "react-icons/fa";
 
 const certifications = [
@@ -115,6 +115,10 @@ function Certification() {
                 <img
                   src={cert.image}
                   alt={cert.title}
+                  loading="lazy"
+                  decoding="async"
+                  width="400"
+                  height="300"
                   className="w-full h-full object-contain filter drop-shadow-lg transition-transform duration-700 group-hover:scale-105"
                 />
 
@@ -208,6 +212,10 @@ function Certification() {
                 <img
                   src={selectedCert.image}
                   alt={selectedCert.title}
+                  loading="lazy"
+                  decoding="async"
+                  width="800"
+                  height="600"
                   className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-2xl relative z-10 border border-white/5"
                 />
               </div>

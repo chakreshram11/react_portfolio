@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import Photo from "../asserts/photo.png";
+import Photo from "../asserts/photo.webp";
 import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaFilePdf, FaChevronRight } from "react-icons/fa";
 import resume from "../projects/single page resume.pdf";
 
@@ -120,14 +120,15 @@ function Home() {
               Connect With Me
             </span>
             {[
-              { icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:text-blue-500 hover:border-blue-500/30 hover:bg-blue-500/10" },
-              { icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:text-sky-500 hover:border-sky-500/30 hover:bg-sky-500/10" },
-              { icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:text-pink-500 hover:border-pink-500/30 hover:bg-pink-500/10" },
-              { icon: FaEnvelope, href: "mailto:chakreshram11@gmail.com", external: false, color: "hover:text-emerald-500 hover:border-emerald-500/30 hover:bg-emerald-500/10" },
+              { name: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:text-blue-500 hover:border-blue-500/30 hover:bg-blue-500/10" },
+              { name: "LinkedIn", icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:text-sky-500 hover:border-sky-500/30 hover:bg-sky-500/10" },
+              { name: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:text-pink-500 hover:border-pink-500/30 hover:bg-pink-500/10" },
+              { name: "Email", icon: FaEnvelope, href: "mailto:chakreshram11@gmail.com", external: false, color: "hover:text-emerald-500 hover:border-emerald-500/30 hover:bg-emerald-500/10" },
             ].map((social, i) => (
               <a
                 key={i}
                 href={social.href}
+                aria-label={social.name}
                 target={social.external !== false ? "_blank" : undefined}
                 rel={social.external !== false ? "noopener noreferrer" : undefined}
                 className={`w-11 h-11 rounded-xl bg-slate-900/50 border border-white/5 flex items-center justify-center text-slate-400 transition-all duration-300 hover:-translate-y-1 ${social.color} shadow-lg`}
@@ -153,7 +154,12 @@ function Home() {
 
               <img
                 src={Photo}
-                alt="Chakresh Ram"
+                alt="Chakresh Ram - Full Stack Developer"
+                fetchpriority="high"
+                loading="eager"
+                decoding="sync"
+                width="420"
+                height="420"
                 className="relative z-10 w-full h-full object-cover rounded-full transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)]"
               />
               {/* Inner subtle gradient overlay to blend the bottom of the photo */}

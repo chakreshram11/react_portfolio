@@ -1,11 +1,11 @@
 import React from "react";
 import { FaCalendarAlt, FaFilePdf, FaBriefcase, FaClock, FaLaptopCode, FaShieldAlt, FaTools, FaChevronRight, FaRegCheckCircle } from "react-icons/fa";
-import manakirana from "../asserts/manakirana.png"
-import osmsecLogo from "../asserts/osmsec.png";
+import manakirana from "../asserts/manakirana.webp"
+import osmsecLogo from "../asserts/osmsec.webp";
 import lifeBoxLetter from "../experience/Lifebox.pdf";
 import osmsec from "../experience/osmsec.pdf";
 import manakiranaletter from "../experience/manakirana.pdf";
-import lifeboxlogo from "../asserts/lifebox.png";
+import lifeboxlogo from "../asserts/lifebox.webp";
 
 function Experience() {
   const experiences = [
@@ -147,7 +147,7 @@ function Experience() {
                         className="w-16 h-16 rounded-2xl flex items-center justify-center p-3 border shadow-inner transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-3 bg-white/[0.02]"
                         style={{ borderColor: `${exp.color}20` }}
                       >
-                        <img src={exp.logo} alt={`${exp.company} Logo`} className="w-full h-full object-contain filter drop-shadow-md" />
+                        <img src={exp.logo} alt={`${exp.company} Logo`} loading="lazy" decoding="async" width="64" height="64" className="w-full h-full object-contain filter drop-shadow-md" />
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold text-white tracking-wide">{exp.company}</h3>

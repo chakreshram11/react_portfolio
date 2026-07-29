@@ -20,10 +20,10 @@ function Footer() {
     <footer className="relative pt-24 pb-10 overflow-x-hidden" style={{ background: '#030712' }}>
 
       {/* Massive Faded Watermark Background */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
-        <h1 className="text-[18vw] font-black text-white/[0.015] tracking-tighter whitespace-nowrap">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden" aria-hidden="true">
+        <span className="text-[18vw] font-black text-white/[0.015] tracking-tighter whitespace-nowrap block">
           CHAKRESH
-        </h1>
+        </span>
       </div>
 
       {/* Animated Top Border Line */}
@@ -82,14 +82,15 @@ function Footer() {
           </p>
           <div className="flex gap-4">
             {[
-              { icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]" },
-              { icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:shadow-[0_0_20px_rgba(220,39,67,0.4)]" },
-              { icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2] hover:shadow-[0_0_20px_rgba(24,119,242,0.4)]" },
-              { icon: FaEnvelope, href: "mailto:chakreshram11@gmail.com", color: "hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]" },
+              { name: "LinkedIn", icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]" },
+              { name: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:shadow-[0_0_20px_rgba(220,39,67,0.4)]" },
+              { name: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2] hover:shadow-[0_0_20px_rgba(24,119,242,0.4)]" },
+              { name: "Email", icon: FaEnvelope, href: "mailto:chakreshram11@gmail.com", color: "hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]" },
             ].map((social, i) => (
                <a
                 key={i}
                 href={social.href}
+                aria-label={social.name}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
                 className={`w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center text-slate-400 transition-all duration-300 hover:-translate-y-2 hover:text-white group ${social.color}`}

@@ -1,10 +1,10 @@
 import React from "react";
 import tensilePdf from "../projects/Tensile.pdf";
-import tensileImg from "../asserts/tensiles.png";
+import tensileImg from "../asserts/tensiles.webp";
 import wordlist from "../projects/Custom Wordlist Generator.pdf";
-import wordlistImg from "../asserts/wordlist.png";
+import wordlistImg from "../asserts/wordlist.webp";
 import cybercrewPdf from "../projects/Cyber Crew.pdf";
-import cybercrew from "../asserts/cybercrew.png";
+import cybercrew from "../asserts/cybercrew.webp";
 import { FaDownload, FaFolderOpen, FaFire, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt } from "react-icons/fa";
 
 function Projects() {
@@ -93,6 +93,10 @@ function Projects() {
                   <img
                     src={featured.img}
                     alt={featured.title}
+                    loading="lazy"
+                    decoding="async"
+                    width="600"
+                    height="400"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter group-hover:brightness-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-[#0a0f1e]/40 to-transparent z-10" />
@@ -193,6 +197,10 @@ function Projects() {
                     <img
                       src={project.img}
                       alt={project.title}
+                      loading="lazy"
+                      decoding="async"
+                      width="400"
+                      height="250"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter group-hover:brightness-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a0f1e]/80 hidden sm:block z-10" />

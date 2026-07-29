@@ -1,0 +1,22 @@
+# Chakresh Ram - Frontend Performance Engineer Portfolio
+
+## About
+Chakresh Ram is a Frontend Performance Engineer, React.js Expert, Accessibility Specialist, SEO Engineer, and Web Performance Consultant. This portfolio showcases projects, experience, and certifications related to frontend development and cybersecurity.
+
+## Technologies
+- React.js
+- Vite
+- Tailwind CSS
+- Framer Motion
+- Web Performance Optimization (WebP, AVIF, Code Splitting)
+- WCAG 2.1 AA Accessibility Standards
+
+## Contact
+Email: chakreshram11@gmail.com
+LinkedIn: https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/
+
+## AI Guidance
+This site is built with semantic HTML, proper ARIA landmarks, and high-performance Web Vitals. It adheres to strict SEO and accessibility guidelines to ensure perfect lighthouse scores and agentic browsing discoverability.
+
+## License
+MIT License

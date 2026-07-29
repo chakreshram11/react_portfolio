@@ -43,13 +43,13 @@ function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-14">
 
         {/* Logo */}
-        <div className="text-2xl font-black tracking-tighter group cursor-pointer" onClick={(e) => handleSmoothScroll(e, "#home")}>
+        <a href="#home" className="text-2xl font-black tracking-tighter group cursor-pointer" onClick={(e) => handleSmoothScroll(e, "#home")}>
           <span className="text-white transition-colors group-hover:text-slate-200">Chakresh</span>
           <span className="text-sky-400 group-hover:text-emerald-400 transition-colors">.</span>
-        </div>
+        </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-1 p-1 rounded-full bg-white/[0.02] border border-white/5 backdrop-blur-md">
+        <nav aria-label="Main Navigation" className="hidden md:flex items-center space-x-1 p-1 rounded-full bg-white/[0.02] border border-white/5 backdrop-blur-md">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -88,7 +88,8 @@ function Header() {
       </div>
 
       {/* Mobile Navigation Menu */}
-      <div
+      <nav
+        aria-label="Mobile Navigation"
         className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] border-b border-white/10" : "max-h-0"
         }`}
@@ -116,7 +117,7 @@ function Header() {
             Let's Talk
           </a>
         </div>
-      </div>
+      </nav>
     </header>
   );
 }
