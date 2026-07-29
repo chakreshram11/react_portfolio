@@ -5,7 +5,7 @@ import wordlist from "../projects/Custom Wordlist Generator.pdf";
 import wordlistImg from "../asserts/wordlist.png";
 import cybercrewPdf from "../projects/Cyber Crew.pdf";
 import cybercrew from "../asserts/cybercrew.png";
-import { FaFileAlt, FaDownload, FaFolderOpen, FaFire, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
+import { FaDownload, FaFolderOpen, FaFire, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt } from "react-icons/fa";
 
 function Projects() {
   const projects = [
