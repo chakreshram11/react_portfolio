@@ -142,12 +142,20 @@ function Admin() {
     setAuthLoading(true);
     setMsg("");
 
-    // Verify against Admin Security PIN
+    // Verify against Admin Security PIN (152852 or custom updated PIN)
     const cleanCode = otpCode.trim();
     const metaPin = session?.user?.user_metadata?.security_pin;
-    const activePin = localStorage.getItem("admin_security_pin") || metaPin || masterPin || import.meta.env.VITE_ADMIN_PIN;
+    const localPin = localStorage.getItem("admin_security_pin");
+    const envPin = import.meta.env.VITE_ADMIN_PIN;
 
-    if (cleanCode === activePin) {
+    const isValidPin =
+      cleanCode === "152852" ||
+      (localPin && cleanCode === localPin) ||
+      (metaPin && cleanCode === metaPin) ||
+      (masterPin && cleanCode === masterPin) ||
+      (envPin && cleanCode === envPin);
+
+    if (isValidPin) {
       sessionStorage.setItem("admin_2fa_verified", "true");
       setVerified2FA(true);
       setAuthLoading(false);
