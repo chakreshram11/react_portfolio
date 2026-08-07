@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/Home";
+import Admin from "./components/Admin";
 
 // Lazy load components below the fold for better initial load performance (FCP/TBT)
 const About = lazy(() => import("./components/About"));
@@ -18,7 +20,7 @@ const SectionLoader = () => (
   </div>
 );
 
-function App() {
+function MainPortfolio() {
   return (
     <div className="bg-dark-950 text-slate-200 antialiased">
       <Header />
@@ -33,6 +35,17 @@ function App() {
         <Footer />
       </Suspense>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPortfolio />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

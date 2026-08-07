@@ -1,75 +1,95 @@
-import React, { useState } from "react";
-import CyberSecurityPNG from "../certificates/cybersecurityamazon.webp";
-import AIcertificatePNG from "../certificates/ai.webp";
-import ExcelCertificatePNG from "../certificates/excel.webp";
-import ZscalerPNG from "../certificates/zscaler.webp";
-import PaloAltoPNG from "../certificates/paloalto.webp";
-import Fortinet from "../certificates/Fortinet Network security Associate Virtual Internship_page-0001.webp"
-import Nptel from "../certificates/NPTEL-IOT.webp"
-import OS_Basics from "../certificates/OperatingSystemsBasics-cisco_page-0001.webp"
+import React, { useState, useEffect } from "react";
 import { FaSearchPlus, FaTimes, FaAward, FaCalendarAlt, FaBuilding } from "react-icons/fa";
+import { supabase } from "../lib/supabase";
 
-const certifications = [
+const DEFAULT_CERTIFICATIONS = [
   {
     title: "Cyber Security Awareness Training",
     organization: "Amazon",
     date: "Nov 2021",
-    image: CyberSecurityPNG,
-    color: "#f59e0b", // Amazon Orange
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/cybersecurity_amazon.webp",
+    color: "#f59e0b",
   },
   {
     title: "Introduction to Artificial Intelligence",
     organization: "Great Learning",
     date: "Nov 2021",
-    image: AIcertificatePNG,
-    color: "#3b82f6", // Blue
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/ai_great_learning.webp",
+    color: "#3b82f6",
   },
   {
     title: "Excel for Beginners",
     organization: "Great Learning",
     date: "Nov 2021",
-    image: ExcelCertificatePNG,
-    color: "#10b981", // Green
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/excel_great_learning.webp",
+    color: "#10b981",
   },
   {
     title: "Operating System Basics",
     organization: "CISCO",
     date: "Oct 2024",
-    image: OS_Basics,
-    color: "#06b6d4", // Cisco Cyan
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/cisco_os_basics.webp",
+    color: "#06b6d4",
   },
   {
     title: "Zscaler Networking Virtual Internship",
     organization: "AICTE Platform",
     date: "Dec 2024",
-    image: ZscalerPNG,
-    color: "#38bdf8", // Sky
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/zscaler_virtual_internship.webp",
+    color: "#38bdf8",
   },
   {
     title: "Palo Alto Cybersecurity Virtual Internship",
     organization: "AICTE Platform",
     date: "Mar 2025",
-    image: PaloAltoPNG,
-    color: "#f97316", // Palo Alto Orange
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/palo_alto_cybersecurity.webp",
+    color: "#f97316",
   },
   {
     title: "IOT",
     organization: "Swayam NPTEL",
     date: "May 2025",
-    image: Nptel,
-    color: "#8b5cf6", // Purple
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/nptel_iot.webp",
+    color: "#8b5cf6",
   },
   {
     title: "Fortinet Network Security Associate",
     organization: "AICTE Platform",
     date: "Aug 2025",
-    image: Fortinet,
-    color: "#ef4444", // Fortinet Red
+    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/fortinet_nsa.webp",
+    color: "#ef4444",
   },
 ];
 
 function Certification() {
+  const [certifications, setCertifications] = useState(DEFAULT_CERTIFICATIONS);
   const [selectedCert, setSelectedCert] = useState(null);
+
+  useEffect(() => {
+    async function fetchCertifications() {
+      try {
+        const { data, error } = await supabase
+          .from("certifications")
+          .select("*")
+          .order("display_order", { ascending: true });
+
+        if (!error && data && data.length > 0) {
+          const mapped = data.map((item, idx) => ({
+            title: item.title,
+            organization: item.organization,
+            date: item.date,
+            image: item.image_url || DEFAULT_CERTIFICATIONS[idx % DEFAULT_CERTIFICATIONS.length].image,
+            color: item.color || "#38bdf8",
+          }));
+          setCertifications(mapped);
+        }
+      } catch (err) {
+        console.error("Supabase cert fetch error:", err);
+      }
+    }
+
+    fetchCertifications();
+  }, []);
 
   return (
     <section
