@@ -23,7 +23,7 @@ function Admin() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPin, setNewPin] = useState("");
-  const [masterPin, setMasterPin] = useState(() => localStorage.getItem("admin_security_pin") || import.meta.env.VITE_ADMIN_PIN || "123456");
+  const [masterPin, setMasterPin] = useState(() => localStorage.getItem("admin_security_pin") || import.meta.env.VITE_ADMIN_PIN || "");
 
   // Data States
   const [projects, setProjects] = useState([]);
@@ -403,7 +403,7 @@ function Admin() {
                   required
                   maxLength={10}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-center text-xl font-mono tracking-widest text-sky-400 font-bold focus:outline-none focus:border-sky-500 transition-colors"
-                  placeholder="123456"
+                  placeholder="••••••••"
                   autoFocus
                 />
                 <p className="text-[10px] text-slate-500 mt-2 text-center">
