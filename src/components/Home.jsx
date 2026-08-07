@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
-import Photo from "../asserts/photo.webp";
 import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaFilePdf, FaChevronRight } from "react-icons/fa";
-import resume from "../projects/single page resume.pdf";
+import { supabase } from "../lib/supabase";
+
+const DEFAULT_PHOTO = "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/profile/photo.webp";
+const DEFAULT_RESUME = "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/documents/single_page_resume.pdf";
+
+const DEFAULT_PHRASES = [
+  "Full Stack Developer",
+  "Cyber Security Student",
+  "Photoshop Editor",
+  "Security Researcher",
+];
 
 function Home() {
   const [typedText, setTypedText] = useState("");
@@ -9,15 +18,40 @@ function Home() {
   const [index, setIndex] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  const phrases = useMemo(
-    () => [
-      "Full Stack Developer",
-      "Cyber Security Student",
-      "Photoshop Editor",
-      "Security Researcher",
-    ],
-    []
-  );
+  // Profile States
+  const [fullName, setFullName] = useState("KUDUPUDI CHAKRESH RAM");
+  const [tagline, setTagline] = useState("Passionate about building secure web applications, identifying vulnerabilities, and creating stunning visual content.");
+  const [photoUrl, setPhotoUrl] = useState(DEFAULT_PHOTO);
+  const [resumeUrl, setResumeUrl] = useState(DEFAULT_RESUME);
+  const [phrases, setPhrases] = useState(DEFAULT_PHRASES);
+
+  // Social Links
+  const [facebookUrl, setFacebookUrl] = useState("https://www.facebook.com/chakresh.ram.1");
+  const [linkedinUrl, setLinkedinUrl] = useState("https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/");
+  const [instagramUrl, setInstagramUrl] = useState("https://www.instagram.com/chakreshram/");
+  const [emailAddr, setEmailAddr] = useState("chakreshram11@gmail.com");
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const { data } = await supabase.from("profile").select("*").limit(1).single();
+        if (data) {
+          if (data.full_name) setFullName(data.full_name);
+          if (data.tagline) setTagline(data.tagline);
+          if (data.avatar_url) setPhotoUrl(data.avatar_url);
+          if (data.resume_url) setResumeUrl(data.resume_url);
+          if (Array.isArray(data.phrases) && data.phrases.length > 0) setPhrases(data.phrases);
+          if (data.facebook_url) setFacebookUrl(data.facebook_url);
+          if (data.linkedin_url) setLinkedinUrl(data.linkedin_url);
+          if (data.instagram_url) setInstagramUrl(data.instagram_url);
+          if (data.email) setEmailAddr(data.email);
+        }
+      } catch (err) {
+        console.error("Supabase profile fetch error:", err);
+      }
+    }
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     let timer;
@@ -73,7 +107,7 @@ function Home() {
             Hello, It's Me
           </h1>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-indigo-400 to-emerald-400 leading-tight pb-2">
-            KUDUPUDI CHAKRESH RAM
+            {fullName}
           </h2>
 
           <div className="mt-4 flex items-center justify-center md:justify-start min-h-[40px]">
@@ -87,12 +121,12 @@ function Home() {
           </div>
 
           <p className="mt-6 text-slate-400 text-sm md:text-base max-w-lg leading-relaxed border-l-2 border-indigo-500/30 pl-4 text-left">
-            Passionate about building secure web applications, identifying vulnerabilities, and creating stunning visual content.
+            {tagline}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-5 mt-10">
             <a
-              href={resume}
+              href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-bold text-white rounded-xl overflow-hidden transition-all hover:scale-105 shadow-[0_0_20px_rgba(56,189,248,0.3)]"
@@ -120,10 +154,10 @@ function Home() {
               Connect With Me
             </span>
             {[
-              { name: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:text-blue-500 hover:border-blue-500/30 hover:bg-blue-500/10" },
-              { name: "LinkedIn", icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:text-sky-500 hover:border-sky-500/30 hover:bg-sky-500/10" },
-              { name: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:text-pink-500 hover:border-pink-500/30 hover:bg-pink-500/10" },
-              { name: "Email", icon: FaEnvelope, href: "mailto:chakreshram11@gmail.com", external: false, color: "hover:text-emerald-500 hover:border-emerald-500/30 hover:bg-emerald-500/10" },
+              { name: "Facebook", icon: FaFacebook, href: facebookUrl, color: "hover:text-blue-500 hover:border-blue-500/30 hover:bg-blue-500/10" },
+              { name: "LinkedIn", icon: FaLinkedin, href: linkedinUrl, color: "hover:text-sky-500 hover:border-sky-500/30 hover:bg-sky-500/10" },
+              { name: "Instagram", icon: FaInstagram, href: instagramUrl, color: "hover:text-pink-500 hover:border-pink-500/30 hover:bg-pink-500/10" },
+              { name: "Email", icon: FaEnvelope, href: `mailto:${emailAddr}`, external: false, color: "hover:text-emerald-500 hover:border-emerald-500/30 hover:bg-emerald-500/10" },
             ].map((social, i) => (
               <a
                 key={i}
@@ -153,8 +187,8 @@ function Home() {
               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
 
               <img
-                src={Photo}
-                alt="Chakresh Ram - Full Stack Developer"
+                src={photoUrl}
+                alt={fullName}
                 fetchpriority="high"
                 loading="eager"
                 decoding="sync"

@@ -1,43 +1,98 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaCode, FaServer, FaShieldAlt, FaBug } from "react-icons/fa";
+import { supabase } from "../lib/supabase";
+
+const DEFAULT_SKILL_CATEGORIES = [
+  {
+    title: "Core & Languages",
+    icon: FaCode,
+    color: "#38bdf8",
+    skills: [
+      { name: "React JS", level: 85 },
+      { name: "HTML", level: 80 },
+      { name: "Python", level: 75 },
+      { name: "Java", level: 70 },
+      { name: "CSS", level: 70 },
+      { name: "JavaScript", level: 60 },
+    ]
+  },
+  {
+    title: "Backend & Cloud",
+    icon: FaServer,
+    color: "#818cf8",
+    skills: [
+      { name: "Python Flask", level: 45 },
+      { name: "Firebase", level: 40 },
+      { name: "Node JS", level: 40 },
+      { name: "Express JS", level: 30 },
+    ]
+  },
+  {
+    title: "OS & Environments",
+    icon: FaShieldAlt,
+    color: "#34d399",
+    skills: [
+      { name: "Windows", level: 90 },
+      { name: "Kali Linux OS", level: 70 },
+      { name: "Ubuntu Live Server", level: 70 },
+    ]
+  }
+];
+
+const DEFAULT_RESEARCH = [
+  {
+    id: 1,
+    title: "Information Disclosure",
+    date: "Feb 2025",
+    description: "Identified improper access control exposing sensitive institutional data. Recommended secure access controls & validation methodologies.",
+    color: "#34d399",
+  },
+  {
+    id: 2,
+    title: "FTP Misconfiguration",
+    date: "Feb 2025",
+    description: "Discovered anonymous FTP access exposing confidential files. Suggested robust authentication mechanisms & secure server protocols.",
+    color: "#818cf8",
+  },
+];
 
 function Skills() {
-  const skillCategories = [
-    {
-      title: "Core & Languages",
-      icon: FaCode,
-      color: "#38bdf8", // sky
-      skills: [
-        { name: "React JS", level: 85 },
-        { name: "HTML", level: 80 },
-        { name: "Python", level: 75 },
-        { name: "Java", level: 70 },
-        { name: "CSS", level: 70 },
-        { name: "JavaScript", level: 60 },
-      ]
-    },
-    {
-      title: "Backend & Cloud",
-      icon: FaServer,
-      color: "#818cf8", // indigo
-      skills: [
-        { name: "Python Flask", level: 45 },
-        { name: "Firebase", level: 40 },
-        { name: "Node JS", level: 40 },
-        { name: "Express JS", level: 30 },
-      ]
-    },
-    {
-      title: "OS & Environments",
-      icon: FaShieldAlt,
-      color: "#34d399", // emerald
-      skills: [
-        { name: "Windows", level: 90 },
-        { name: "Kali Linux OS", level: 70 },
-        { name: "Ubuntu Live Server", level: 70 },
-      ]
+  const [skillCategories, setSkillCategories] = useState(DEFAULT_SKILL_CATEGORIES);
+  const [researchItems, setResearchItems] = useState(DEFAULT_RESEARCH);
+
+  useEffect(() => {
+    async function fetchSkillsAndResearch() {
+      try {
+        const { data: sData } = await supabase
+          .from("skills")
+          .select("*")
+          .order("display_order", { ascending: true });
+
+        if (sData && sData.length > 0) {
+          const mapped = sData.map((item, idx) => ({
+            title: item.category,
+            icon: FaCode,
+            color: item.color || "#38bdf8",
+            skills: item.skill_items || [],
+          }));
+          setSkillCategories(mapped);
+        }
+
+        const { data: rData } = await supabase
+          .from("research")
+          .select("*")
+          .order("display_order", { ascending: true });
+
+        if (rData && rData.length > 0) {
+          setResearchItems(rData);
+        }
+      } catch (err) {
+        console.error("Supabase skills/research fetch error:", err);
+      }
     }
-  ];
+
+    fetchSkillsAndResearch();
+  }, []);
 
   return (
     <section id="skills" className="min-h-screen py-20 relative overflow-x-hidden" style={{ background: '#030712' }}>
@@ -141,29 +196,28 @@ function Skills() {
             </div>
 
             <div className="space-y-8 flex-1 relative before:absolute before:inset-0 before:ml-[5px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-emerald-500/40 before:via-indigo-500/20 before:to-transparent z-10">
-
-              <div className="relative pl-7">
-                <div className="absolute w-3 h-3 rounded-full bg-emerald-400 border-[3px] border-[#030712] -left-[5.5px] top-1 shadow-[0_0_15px_#34d399]" />
-                <span className="font-bold text-slate-100 block mb-1 text-sm tracking-wide">
-                  Information Disclosure
-                </span>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400 block mb-3">Feb 2025</span>
-                <span className="text-slate-400 text-xs leading-relaxed block">
-                  Identified improper access control exposing sensitive institutional data. Recommended secure access controls & validation methodologies.
-                </span>
-              </div>
-
-              <div className="relative pl-7">
-                <div className="absolute w-3 h-3 rounded-full bg-indigo-400 border-[3px] border-[#030712] -left-[5.5px] top-1 shadow-[0_0_15px_#818cf8]" />
-                <span className="font-bold text-slate-100 block mb-1 text-sm tracking-wide">
-                  FTP Misconfiguration
-                </span>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-indigo-400 block mb-3">Feb 2025</span>
-                <span className="text-slate-400 text-xs leading-relaxed block">
-                  Discovered anonymous FTP access exposing confidential files. Suggested robust authentication mechanisms & secure server protocols.
-                </span>
-              </div>
-
+              {researchItems.map((item, rIdx) => {
+                const itemColor = item.color || "#34d399";
+                return (
+                  <div key={item.id || rIdx} className="relative pl-7">
+                    <div
+                      className="absolute w-3 h-3 rounded-full border-[3px] border-[#030712] -left-[5.5px] top-1 shadow-md"
+                      style={{ background: itemColor, boxShadow: `0 0 15px ${itemColor}` }}
+                    />
+                    <span className="font-bold text-slate-100 block mb-1 text-sm tracking-wide">
+                      {item.title}
+                    </span>
+                    {item.date && (
+                      <span className="text-[10px] uppercase font-bold tracking-widest block mb-2" style={{ color: itemColor }}>
+                        {item.date}
+                      </span>
+                    )}
+                    <span className="text-slate-400 text-xs leading-relaxed block">
+                      {item.description}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="mt-12 relative z-10">
