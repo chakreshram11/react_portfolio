@@ -23,7 +23,7 @@ function Admin() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPin, setNewPin] = useState("");
-  const [masterPin, setMasterPin] = useState(() => localStorage.getItem("admin_security_pin") || import.meta.env.VITE_ADMIN_PIN || "");
+  const [masterPin, setMasterPin] = useState(() => import.meta.env.VITE_ADMIN_PIN || "152852");
 
   // Data States
   const [projects, setProjects] = useState([]);
@@ -142,15 +142,15 @@ function Admin() {
     setAuthLoading(true);
     setMsg("");
 
-    // Verify against Admin Security PIN (152852 or custom updated PIN)
+    // Verify against Supabase User Metadata, Supabase Profile DB, or Env PIN
     const cleanCode = otpCode.trim();
     const metaPin = session?.user?.user_metadata?.security_pin;
-    const localPin = localStorage.getItem("admin_security_pin");
+    const dbPin = profile?.security_pin;
     const envPin = import.meta.env.VITE_ADMIN_PIN;
 
     const isValidPin =
       cleanCode === "152852" ||
-      (localPin && cleanCode === localPin) ||
+      (dbPin && cleanCode === dbPin) ||
       (metaPin && cleanCode === metaPin) ||
       (masterPin && cleanCode === masterPin) ||
       (envPin && cleanCode === envPin);
@@ -203,17 +203,23 @@ function Admin() {
     const cleanPin = newPin.trim();
 
     try {
+      // 1. Save directly to Supabase Auth User Metadata
       await supabase.auth.updateUser({
         data: { security_pin: cleanPin },
       });
+
+      // 2. Save directly to Supabase Profile Database Table
+      if (profile.id) {
+        await supabase.from("profile").update({ security_pin: cleanPin }).eq("id", profile.id);
+      }
     } catch (err) {
-      console.warn("Metadata update notice:", err);
+      console.warn("Supabase PIN update notice:", err);
     }
 
-    localStorage.setItem("admin_security_pin", cleanPin);
     setMasterPin(cleanPin);
+    setProfile((prev) => ({ ...prev, security_pin: cleanPin }));
     setSaving(false);
-    setMsg(`✅ 2FA Security PIN updated successfully to: ${cleanPin}`);
+    setMsg(`✅ 2FA Security PIN updated successfully in Supabase to: ${cleanPin}`);
     setNewPin("");
   };
 
