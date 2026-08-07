@@ -142,20 +142,18 @@ function Admin() {
     setAuthLoading(true);
     setMsg("");
 
-    // Verify against Supabase User Metadata, Supabase Profile DB, or Env PIN
+    // Verify against active PIN (Custom Supabase PIN overrides initial fallback)
     const cleanCode = otpCode.trim();
     const metaPin = session?.user?.user_metadata?.security_pin;
     const dbPin = profile?.security_pin;
     const envPin = import.meta.env.VITE_ADMIN_PIN;
 
-    const isValidPin =
-      cleanCode === "152852" ||
-      (dbPin && cleanCode === dbPin) ||
-      (metaPin && cleanCode === metaPin) ||
-      (masterPin && cleanCode === masterPin) ||
-      (envPin && cleanCode === envPin);
+    const activeCustomPin = dbPin || metaPin;
+    const activeDefaultPin = envPin || masterPin || "152852";
 
-    if (isValidPin) {
+    const targetPin = activeCustomPin || activeDefaultPin;
+
+    if (cleanCode === targetPin) {
       sessionStorage.setItem("admin_2fa_verified", "true");
       setVerified2FA(true);
       setAuthLoading(false);
