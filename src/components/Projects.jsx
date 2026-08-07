@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaDownload, FaFolderOpen, FaFire, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt, FaCode, FaPlus } from "react-icons/fa";
+import { FaDownload, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt, FaCode } from "react-icons/fa";
 import { supabase } from "../lib/supabase";
 
 const DEFAULT_PROJECTS = [
@@ -223,30 +223,6 @@ function Projects() {
               </div>
             );
           })}
-        </div>
-
-        {/* Bottom Summary Bar */}
-        <div className="mt-12 glass-card rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-white/5 relative overflow-hidden group hover:border-white/10 transition-all duration-500">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-sky-500/10 transition-all duration-700" />
-
-          <div className="flex items-center gap-5 relative z-10">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center accent-gradient shadow-lg group-hover:scale-105 transition-transform duration-500">
-              <FaFolderOpen className="text-dark-950 text-xl" />
-            </div>
-            <div>
-              <h3 className="text-white font-bold text-lg tracking-wide">Continuous Development</h3>
-              <p className="text-xs text-slate-400 mt-1 font-medium">Total Projects Live: <span className="text-sky-400 font-bold">{projects.length}</span></p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 relative z-10">
-            <a
-              href="/admin"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all shadow-md"
-            >
-              <FaPlus /> Manage in Admin Panel
-            </a>
-          </div>
         </div>
 
       </div>
