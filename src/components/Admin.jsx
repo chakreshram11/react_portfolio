@@ -23,7 +23,7 @@ function Admin() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPin, setNewPin] = useState("");
-  const [masterPin, setMasterPin] = useState(() => import.meta.env.VITE_ADMIN_PIN || "152852");
+  const [masterPin, setMasterPin] = useState(() => import.meta.env.VITE_ADMIN_PIN || "");
 
   // Data States
   const [projects, setProjects] = useState([]);
@@ -149,7 +149,7 @@ function Admin() {
     const envPin = import.meta.env.VITE_ADMIN_PIN;
 
     const activeCustomPin = dbPin || metaPin;
-    const activeDefaultPin = envPin || masterPin || "152852";
+    const activeDefaultPin = envPin || masterPin || "";
 
     const targetPin = activeCustomPin || activeDefaultPin;
 
