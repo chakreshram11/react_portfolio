@@ -1,62 +1,62 @@
 import React, { useState, useEffect } from "react";
 import { FaSearchPlus, FaTimes, FaAward, FaCalendarAlt, FaBuilding } from "react-icons/fa";
-import { supabase } from "../lib/supabase";
+import { supabase, getStorageUrl } from "../lib/supabase";
 
 const DEFAULT_CERTIFICATIONS = [
   {
     title: "Cyber Security Awareness Training",
     organization: "Amazon",
     date: "Nov 2021",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/cybersecurity_amazon.webp",
+    image: getStorageUrl("certifications/cybersecurity_amazon.webp"),
     color: "#f59e0b",
   },
   {
     title: "Introduction to Artificial Intelligence",
     organization: "Great Learning",
     date: "Nov 2021",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/ai_great_learning.webp",
+    image: getStorageUrl("certifications/ai_great_learning.webp"),
     color: "#3b82f6",
   },
   {
     title: "Excel for Beginners",
     organization: "Great Learning",
     date: "Nov 2021",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/excel_great_learning.webp",
+    image: getStorageUrl("certifications/excel_great_learning.webp"),
     color: "#10b981",
   },
   {
     title: "Operating System Basics",
     organization: "CISCO",
     date: "Oct 2024",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/cisco_os_basics.webp",
+    image: getStorageUrl("certifications/cisco_os_basics.webp"),
     color: "#06b6d4",
   },
   {
     title: "Zscaler Networking Virtual Internship",
     organization: "AICTE Platform",
     date: "Dec 2024",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/zscaler_virtual_internship.webp",
+    image: getStorageUrl("certifications/zscaler_virtual_internship.webp"),
     color: "#38bdf8",
   },
   {
     title: "Palo Alto Cybersecurity Virtual Internship",
     organization: "AICTE Platform",
     date: "Mar 2025",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/palo_alto_cybersecurity.webp",
+    image: getStorageUrl("certifications/palo_alto_cybersecurity.webp"),
     color: "#f97316",
   },
   {
     title: "IOT",
     organization: "Swayam NPTEL",
     date: "May 2025",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/nptel_iot.webp",
+    image: getStorageUrl("certifications/nptel_iot.webp"),
     color: "#8b5cf6",
   },
   {
     title: "Fortinet Network Security Associate",
     organization: "AICTE Platform",
     date: "Aug 2025",
-    image: "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/certifications/fortinet_nsa.webp",
+    image: getStorageUrl("certifications/fortinet_nsa.webp"),
     color: "#ef4444",
   },
 ];
@@ -78,7 +78,7 @@ function Certification() {
             title: item.title,
             organization: item.organization,
             date: item.date,
-            image: item.image_url || DEFAULT_CERTIFICATIONS[idx % DEFAULT_CERTIFICATIONS.length].image,
+            image: getStorageUrl(item.image_url) || DEFAULT_CERTIFICATIONS[idx % DEFAULT_CERTIFICATIONS.length].image,
             color: item.color || "#38bdf8",
           }));
           setCertifications(mapped);

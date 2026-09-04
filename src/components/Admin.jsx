@@ -84,7 +84,15 @@ function Admin() {
 
     // 1. Projects
     const { data: projData } = await supabase.from("projects").select("*").order("display_order", { ascending: true });
-    setProjects(projData || []);
+    const mappedProjects = (projData || []).map((item) => {
+      let category = item.category || item.section;
+      if (!category && Array.isArray(item.tags)) {
+        const catTag = item.tags.find((t) => typeof t === "string" && (t.startsWith("Category:") || t.startsWith("cat:")));
+        if (catTag) category = catTag.replace(/^(Category:|cat:)/i, "").trim();
+      }
+      return { ...item, category: category || "Development" };
+    });
+    setProjects(mappedProjects);
 
     // 2. Certifications
     const { data: certData } = await supabase.from("certifications").select("*").order("display_order", { ascending: true });
@@ -282,6 +290,24 @@ function Admin() {
     } else {
       const res = await supabase.from(table).insert([payload]);
       error = res.error;
+    }
+
+    // Fallback: If category column is missing in Supabase schema, embed Category: <name> into tags array & retry saving!
+    if (error && modalType === "project" && error.message && (error.message.includes("category") || error.message.includes("column"))) {
+      const catTag = `Category: ${payload.category || "Development"}`;
+      const existingTags = Array.isArray(payload.tags)
+        ? payload.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:"))
+        : [];
+      delete payload.category;
+      payload.tags = [...existingTags, catTag];
+
+      if (editingId) {
+        const res = await supabase.from(table).update(payload).eq("id", editingId);
+        error = res.error;
+      } else {
+        const res = await supabase.from(table).insert([payload]);
+        error = res.error;
+      }
     }
 
     setSaving(false);
@@ -519,7 +545,7 @@ function Admin() {
               <button
                 onClick={() => {
                   setEditingId(null);
-                  setFormData({ status: "Completed", paid: false, color: "#38bdf8", display_order: projects.length + 1 });
+                  setFormData({ status: "Completed", category: "Development", paid: false, color: "#38bdf8", display_order: projects.length + 1 });
                   setModalType("project");
                 }}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-dark-950 font-bold text-xs shadow-lg shadow-sky-500/20"
@@ -537,11 +563,16 @@ function Admin() {
                     <div className="h-44 bg-slate-950 flex items-center justify-center text-xs text-slate-600 font-semibold">No Image Uploaded</div>
                   )}
                   <div className="p-5 flex flex-col flex-1">
-                    <h3 className="font-bold text-white text-lg">{item.title}</h3>
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <h3 className="font-bold text-white text-lg">{item.title}</h3>
+                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/30 uppercase tracking-wider">
+                        {item.category || item.section || "Development"}
+                      </span>
+                    </div>
                     <p className="text-xs text-sky-400 font-semibold mb-2">{item.subtitle}</p>
                     <p className="text-xs text-slate-400 line-clamp-3 mb-4">{item.description}</p>
                     <div className="flex gap-2 mt-auto pt-3 border-t border-slate-800/80">
-                      <button onClick={() => { setEditingId(item.id); setFormData(item); setModalType("project"); }} className="flex-1 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all">Edit</button>
+                      <button onClick={() => { setEditingId(item.id); setFormData({ ...item, category: item.category || item.section || "Development" }); setModalType("project"); }} className="flex-1 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all">Edit</button>
                       <button onClick={() => handleDeleteItem("projects", item.id, item.title)} className="flex-1 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold transition-all">Delete</button>
                     </div>
                   </div>
@@ -1099,6 +1130,33 @@ function Admin() {
                 <>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Title *</label><input type="text" value={formData.title || ""} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Subtitle</label><input type="text" value={formData.subtitle || ""} onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1">Sub-Section / Category *</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {["Development", "Security", "Networking", "Tools"].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, category: preset })}
+                          className={`text-xs font-bold px-3 py-1 rounded-lg border transition-all ${
+                            (formData.category || "Development").toLowerCase() === preset.toLowerCase()
+                              ? "bg-sky-500 text-dark-950 border-sky-400 font-extrabold"
+                              : "bg-slate-950 text-slate-400 border-slate-800 hover:text-white"
+                          }`}
+                        >
+                          {preset}
+                        </button>
+                      ))}
+                    </div>
+                    <input
+                      type="text"
+                      value={formData.category || ""}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      placeholder="Enter or select sub-section (e.g. Development, Security, Networking)"
+                      required
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-sky-500"
+                    />
+                  </div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Description</label><textarea value={formData.description || ""} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Cover Image</label><input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, (url) => setFormData({ ...formData, img_url: url }))} className="text-xs text-slate-400" /></div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Documentation PDF</label><input type="file" accept="application/pdf" onChange={(e) => handleFileUpload(e, (url) => setFormData({ ...formData, doc_url: url }))} className="text-xs text-slate-400" /></div>

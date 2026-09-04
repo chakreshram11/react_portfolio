@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaFilePdf, FaChevronRight } from "react-icons/fa";
-import { supabase } from "../lib/supabase";
-
-const DEFAULT_PHOTO = "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/profile/photo.webp";
-const DEFAULT_RESUME = "https://uyemhrhwuyrqwvppluge.supabase.co/storage/v1/object/public/portfolio-assets/documents/single_page_resume.pdf";
+import { supabase, getStorageUrl, fetchProfileData } from "../lib/supabase";
 
 const DEFAULT_PHRASES = [
   "Full Stack Developer",
@@ -19,38 +16,34 @@ function Home() {
   const [typingSpeed, setTypingSpeed] = useState(150);
 
   // Profile States
-  const [fullName, setFullName] = useState("KUDUPUDI CHAKRESH RAM");
-  const [tagline, setTagline] = useState("Passionate about building secure web applications, identifying vulnerabilities, and creating stunning visual content.");
-  const [photoUrl, setPhotoUrl] = useState(DEFAULT_PHOTO);
-  const [resumeUrl, setResumeUrl] = useState(DEFAULT_RESUME);
+  const [fullName, setFullName] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [photoUrl, setPhotoUrl] = useState(() => getStorageUrl("profile/photo.webp"));
+  const [resumeUrl, setResumeUrl] = useState(() => getStorageUrl("documents/single_page_resume.pdf"));
   const [phrases, setPhrases] = useState(DEFAULT_PHRASES);
 
   // Social Links
-  const [facebookUrl, setFacebookUrl] = useState("https://www.facebook.com/chakresh.ram.1");
-  const [linkedinUrl, setLinkedinUrl] = useState("https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/");
-  const [instagramUrl, setInstagramUrl] = useState("https://www.instagram.com/chakreshram/");
-  const [emailAddr, setEmailAddr] = useState("chakreshram11@gmail.com");
+  const [facebookUrl, setFacebookUrl] = useState("#");
+  const [linkedinUrl, setLinkedinUrl] = useState("#");
+  const [instagramUrl, setInstagramUrl] = useState("#");
+  const [emailAddr, setEmailAddr] = useState("");
 
   useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const { data } = await supabase.from("profile").select("*").limit(1).single();
-        if (data) {
-          if (data.full_name) setFullName(data.full_name);
-          if (data.tagline) setTagline(data.tagline);
-          if (data.avatar_url) setPhotoUrl(data.avatar_url);
-          if (data.resume_url) setResumeUrl(data.resume_url);
-          if (Array.isArray(data.phrases) && data.phrases.length > 0) setPhrases(data.phrases);
-          if (data.facebook_url) setFacebookUrl(data.facebook_url);
-          if (data.linkedin_url) setLinkedinUrl(data.linkedin_url);
-          if (data.instagram_url) setInstagramUrl(data.instagram_url);
-          if (data.email) setEmailAddr(data.email);
-        }
-      } catch (err) {
-        console.error("Supabase profile fetch error:", err);
+    async function loadProfile() {
+      const data = await fetchProfileData();
+      if (data) {
+        if (data.full_name) setFullName(data.full_name);
+        if (data.tagline) setTagline(data.tagline);
+        if (data.avatar_url) setPhotoUrl(getStorageUrl(data.avatar_url));
+        if (data.resume_url) setResumeUrl(getStorageUrl(data.resume_url));
+        if (Array.isArray(data.phrases) && data.phrases.length > 0) setPhrases(data.phrases);
+        if (data.facebook_url) setFacebookUrl(data.facebook_url);
+        if (data.linkedin_url) setLinkedinUrl(data.linkedin_url);
+        if (data.instagram_url) setInstagramUrl(data.instagram_url);
+        if (data.email) setEmailAddr(data.email);
       }
     }
-    fetchProfile();
+    loadProfile();
   }, []);
 
   useEffect(() => {
@@ -86,7 +79,7 @@ function Home() {
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '6s' }} />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/5 via-indigo-500/5 to-emerald-500/5 opacity-50 mix-blend-overlay" />
       </div>
 
       <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20 relative z-10 w-full pt-20 pb-10">
@@ -183,8 +176,8 @@ function Home() {
 
             {/* Image Container */}
             <div className="relative w-[260px] sm:w-[320px] md:w-[360px] lg:w-[420px] aspect-square rounded-full overflow-hidden border-4 border-[#030712]/50 z-10 transform transition-transform duration-500 hover:scale-[1.02] bg-gradient-to-tr from-sky-400 via-indigo-400 to-emerald-400 shadow-[inset_0_0_60px_rgba(255,255,255,0.25)]">
-              {/* Optional dynamic texture over the neon background */}
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+              {/* Dynamic texture over the neon background */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/40 via-transparent to-white/10 mix-blend-overlay" />
 
               <img
                 src={photoUrl}
