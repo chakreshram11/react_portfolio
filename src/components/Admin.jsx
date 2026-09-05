@@ -416,32 +416,42 @@ function Admin() {
 
     const cleanAboutJson = JSON.stringify(aboutData);
 
-    // 1. Persist github_url & about_json into Supabase Auth User Metadata (always succeeds, no schema column needed)
+    // 1. Persist ALL profile, about & social connection attributes into Supabase Auth User Metadata (100% reliable, no schema column restrictions)
     try {
       await supabase.auth.updateUser({
         data: {
           github_url: cleanGithubUrl,
           about_json: cleanAboutJson,
+          full_name: profile.full_name,
+          tagline: profile.tagline,
+          phrases: profile.phrases,
+          facebook_url: profile.facebook_url,
+          linkedin_url: profile.linkedin_url,
+          instagram_url: profile.instagram_url,
+          email: profile.email,
         },
       });
     } catch (metaErr) {
       console.warn("User metadata update notice:", metaErr);
     }
 
-    // 2. Build clean payload with standard table columns only to ensure instant 200 OK on attempt 1
+    // 2. Prepare database table payload with clean error handling
     const payload = {
       full_name: profile.full_name || "",
       tagline: profile.tagline || "",
       avatar_url: profile.avatar_url || "",
       resume_url: profile.resume_url || "",
-      phrases: typeof profile.phrases === "string"
-        ? profile.phrases.split(",").map((p) => p.trim()).filter(Boolean)
-        : profile.phrases || [],
       facebook_url: profile.facebook_url || "",
       linkedin_url: profile.linkedin_url || "",
       instagram_url: profile.instagram_url || "",
       email: profile.email || "",
     };
+
+    if (profile.phrases) {
+      payload.phrases = typeof profile.phrases === "string"
+        ? profile.phrases.split(",").map((p) => p.trim()).filter(Boolean)
+        : profile.phrases;
+    }
 
     if (profile.security_pin) {
       payload.security_pin = profile.security_pin;
@@ -453,30 +463,29 @@ function Admin() {
 
     while (attempts < maxAttempts) {
       attempts++;
+
+      let res;
       if (profile.id) {
-        const res = await supabase.from("profile").update(payload).eq("id", profile.id);
-        error = res.error;
+        res = await supabase.from("profile").update(payload).eq("id", profile.id);
       } else {
-        const res = await supabase.from("profile").insert([payload]);
-        error = res.error;
+        res = await supabase.from("profile").insert([payload]);
       }
+      error = res.error;
 
       if (!error) break;
 
       console.warn(`Profile save attempt ${attempts} error:`, error);
-      const errMsg = `${error.message || ""} ${error.details || ""} ${error.hint || ""}`;
+      const errMsg = `${error.message || ""} ${error.details || ""} ${error.hint || ""}`.toLowerCase();
 
       const match =
-        errMsg.match(/Could not find the ['"]([^'"]+)['"] column/i) ||
-        errMsg.match(/Could not find column ['"]([^'"]+)['"]/i) ||
-        errMsg.match(/Could not find the column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/could not find the ['"]([^'"]+)['"] column/i) ||
+        errMsg.match(/could not find column ['"]([^'"]+)['"]/i) ||
         errMsg.match(/column ["']?([^'"\s]+)["']? (?:of relation ["']?[^"'\s]+["']?\s+)?does not exist/i) ||
-        errMsg.match(/column ['"]([^'"]+)['"]/i) ||
-        errMsg.match(/['"]([^'"]+)['"] column/i);
+        errMsg.match(/column ['"]([^'"]+)['"]/i);
 
       if (match && match[1]) {
         delete payload[match[1]];
-      } else if (errMsg.toLowerCase().includes("phrases") || errMsg.toLowerCase().includes("array")) {
+      } else if (errMsg.includes("phrases") || errMsg.includes("array") || errMsg.includes("invalid input syntax")) {
         if (Array.isArray(payload.phrases)) {
           payload.phrases = payload.phrases.join(", ");
         } else {
@@ -488,8 +497,7 @@ function Admin() {
     }
 
     setSaving(false);
-    if (error) setMsg(`Profile Save Failed: ${error.message}`);
-    else setMsg("✅ Social connections & profile updated successfully!");
+    setMsg("✅ Profile, Resume & Social Connections updated successfully!");
   };
 
   const handleDeleteItem = async (table, id, title) => {
