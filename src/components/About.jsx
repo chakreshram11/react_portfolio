@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { FaShieldAlt, FaCode, FaCertificate, FaBriefcase, FaRocket, FaGraduationCap, FaQuoteLeft } from "react-icons/fa";
+import { FaShieldAlt, FaCode, FaCertificate, FaBriefcase, FaRocket, FaGraduationCap, FaQuoteLeft, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { supabase, fetchProfileData } from "../lib/supabase";
 
 const DEFAULT_TECH_STACK = [
@@ -9,46 +9,80 @@ const DEFAULT_TECH_STACK = [
   { name: "Node.js", color: "#68a063" },
   { name: "HTML", color: "#e34f26" },
   { name: "CSS", color: "#264de4" },
-  { name: "Flask", color: "#ffffff" },
+  { name: "Flask", color: "#a855f7" },
   { name: "Firebase", color: "#ffca28" },
   { name: "Kali Linux", color: "#557c94" },
   { name: "Java", color: "#ed8b00" },
-  { name: "Express", color: "#ffffff" },
+  { name: "Express", color: "#14b8a6" },
   { name: "Tailwind", color: "#38bdf8" },
 ];
 
-const COLOR_MAP = {
-  react: "#61dafb",
-  javascript: "#f7df1e",
-  js: "#f7df1e",
-  python: "#3776ab",
-  "node.js": "#68a063",
-  node: "#68a063",
-  html: "#e34f26",
-  css: "#264de4",
-  flask: "#ffffff",
-  firebase: "#ffca28",
-  "kali linux": "#557c94",
-  kali: "#557c94",
-  java: "#ed8b00",
-  express: "#ffffff",
-  tailwind: "#38bdf8",
-  typescript: "#3178c6",
-  docker: "#2496ed",
-  cpp: "#00599c",
-  c: "#a8b9cc",
-  git: "#f05032",
-  github: "#a855f7",
-  scapy: "#38bdf8",
-  burpsuite: "#ff6600",
-  wireshark: "#1679a7",
-  linux: "#fcb400",
-  aws: "#ff9900",
-};
+const VIBRANT_PALETTE = [
+  "#38bdf8", // sky blue
+  "#818cf8", // indigo
+  "#34d399", // emerald
+  "#f43f5e", // rose
+  "#fb923c", // orange
+  "#a855f7", // purple
+  "#f59e0b", // amber
+  "#ec4899", // pink
+  "#14b8a6", // teal
+  "#6366f1", // violet
+  "#10b981", // green
+  "#06b6d4", // cyan
+  "#f97316", // bright orange
+  "#e11d48", // crimson
+  "#8b5cf6", // deep violet
+  "#0284c7", // ocean blue
+  "#d97706", // warm amber
+];
+
+const COLOR_KEYWORD_MAP = [
+  { keywords: ["react"], color: "#61dafb" },
+  { keywords: ["javascript", "js"], color: "#f7df1e" },
+  { keywords: ["python"], color: "#3776ab" },
+  { keywords: ["node"], color: "#68a063" },
+  { keywords: ["html"], color: "#e34f26" },
+  { keywords: ["css"], color: "#264de4" },
+  { keywords: ["flask"], color: "#a855f7" },
+  { keywords: ["firebase"], color: "#ffca28" },
+  { keywords: ["kali", "linux", "ubuntu"], color: "#557c94" },
+  { keywords: ["java"], color: "#ed8b00" },
+  { keywords: ["express"], color: "#14b8a6" },
+  { keywords: ["tailwind"], color: "#38bdf8" },
+  { keywords: ["typescript", "ts"], color: "#3178c6" },
+  { keywords: ["docker"], color: "#2496ed" },
+  { keywords: ["c++", "cpp"], color: "#00599c" },
+  { keywords: ["git", "github"], color: "#f05032" },
+  { keywords: ["burp"], color: "#ff6600" },
+  { keywords: ["wireshark"], color: "#1679a7" },
+  { keywords: ["aws", "cloud"], color: "#ff9900" },
+  { keywords: ["nmap"], color: "#ef4444" },
+  { keywords: ["metasploit"], color: "#dc2626" },
+  { keywords: ["owasp"], color: "#34d399" },
+  { keywords: ["cisco", "packet", "routing", "ssh", "ip", "ospf", "icmp", "ethernet", "dhcp", "network", "vty", "vpcs", "dora", "udp", "arp", "gns3", "subnet"], color: "#818cf8" },
+  { keywords: ["ai", "gpt", "claude", "gemini", "chatgpt"], color: "#a855f7" },
+  { keywords: ["photoshop", "adobe", "capcut", "davinci", "canva", "gamma", "ui", "ux"], color: "#ec4899" },
+  { keywords: ["windows"], color: "#0078d4" },
+];
 
 function getTechColor(name) {
   const clean = String(name || "").toLowerCase().trim();
-  return COLOR_MAP[clean] || "#38bdf8";
+
+  // 1. Keyword match
+  for (const item of COLOR_KEYWORD_MAP) {
+    if (item.keywords.some((kw) => clean.includes(kw))) {
+      return item.color;
+    }
+  }
+
+  // 2. Deterministic hash color from vibrant palette
+  let hash = 0;
+  for (let i = 0; i < clean.length; i++) {
+    hash = clean.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % VIBRANT_PALETTE.length;
+  return VIBRANT_PALETTE[index];
 }
 
 function About() {
@@ -61,6 +95,8 @@ function About() {
   });
   const [dbCerts, setDbCerts] = useState([]);
   const [dbTechStack, setDbTechStack] = useState([]);
+  const [showAllTech, setShowAllTech] = useState(false);
+  const INITIAL_TECH_COUNT = 14;
 
   useEffect(() => {
     async function loadData() {
@@ -208,6 +244,11 @@ function About() {
     // 3. Fallback default
     return DEFAULT_TECH_STACK;
   }, [profile, dbTechStack]);
+
+  const visibleTech = useMemo(() => {
+    if (showAllTech) return techStack;
+    return techStack.slice(0, INITIAL_TECH_COUNT);
+  }, [techStack, showAllTech]);
 
   const currentFocus = useMemo(() => {
     if (profile?.current_focus_items) {
@@ -382,7 +423,7 @@ function About() {
             </div>
 
             <div className="flex flex-wrap gap-2.5 relative z-10">
-              {techStack.map((tech, i) => (
+              {visibleTech.map((tech, i) => (
                 <span
                   key={i}
                   className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all duration-300 hover:scale-105 cursor-default hover:shadow-[0_0_15px_currentColor]"
@@ -396,6 +437,27 @@ function About() {
                 </span>
               ))}
             </div>
+
+            {techStack.length > INITIAL_TECH_COUNT && (
+              <div className="mt-5 relative z-10 border-t border-white/5 pt-3">
+                <button
+                  onClick={() => setShowAllTech((prev) => !prev)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-bold text-sky-400 hover:text-white hover:bg-sky-500/20 hover:border-sky-500/40 transition-all duration-300 shadow-md"
+                >
+                  {showAllTech ? (
+                    <>
+                      <span>View Less</span>
+                      <FaChevronUp className="text-[10px]" />
+                    </>
+                  ) : (
+                    <>
+                      <span>View More (+{techStack.length - INITIAL_TECH_COUNT} more)</span>
+                      <FaChevronDown className="text-[10px]" />
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
 
             {/* Mini Goals */}
             <div className="mt-8 pt-6 relative z-10 border-t border-white/10">
