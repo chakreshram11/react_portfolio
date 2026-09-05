@@ -596,9 +596,38 @@ function Admin() {
                       </span>
                     </div>
                     <p className="text-xs text-sky-400 font-semibold mb-2">{item.subtitle}</p>
-                    <p className="text-xs text-slate-400 line-clamp-3 mb-4">{item.description}</p>
+                    <p className="text-xs text-slate-400 line-clamp-3 mb-3">{item.description}</p>
+
+                    {Array.isArray(item.tags) && item.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:")).length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {item.tags
+                          .filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:"))
+                          .map((tag, idx) => (
+                            <span key={idx} className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-950 text-sky-300 border border-slate-800">
+                              {tag}
+                            </span>
+                          ))}
+                      </div>
+                    )}
+
                     <div className="flex gap-2 mt-auto pt-3 border-t border-slate-800/80">
-                      <button onClick={() => { setEditingId(item.id); setFormData({ ...item, category: item.category || item.section || "Development" }); setModalType("project"); }} className="flex-1 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all">Edit</button>
+                      <button
+                        onClick={() => {
+                          setEditingId(item.id);
+                          const cleanTags = Array.isArray(item.tags)
+                            ? item.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:")).join(", ")
+                            : item.tags || "";
+                          setFormData({
+                            ...item,
+                            category: item.category || item.section || "Development",
+                            tags: cleanTags
+                          });
+                          setModalType("project");
+                        }}
+                        className="flex-1 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all"
+                      >
+                        Edit
+                      </button>
                       <button onClick={() => handleDeleteItem("projects", item.id, item.title)} className="flex-1 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold transition-all">Delete</button>
                     </div>
                   </div>
@@ -1183,6 +1212,71 @@ function Admin() {
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-sky-500"
                     />
                   </div>
+
+                  {/* TECH STACK & BADGES EDITOR */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1 flex items-center justify-between">
+                      <span>Tech Stack & Badges (Comma Separated) 🏷️</span>
+                      <span className="text-[10px] font-mono text-sky-400">e.g. React, Firebase, Admin Panel</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={
+                        Array.isArray(formData.tags)
+                          ? formData.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:")).join(", ")
+                          : formData.tags || ""
+                      }
+                      onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                      placeholder="e.g. React, Firebase, Admin Panel, Real-time"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-sky-400 font-medium focus:outline-none focus:border-sky-500 transition-colors"
+                    />
+                    <p className="text-[10px] text-slate-500 mt-1">
+                      Enter technologies separated by commas. These will render as interactive tech badges on the project card.
+                    </p>
+
+                    {/* Live Badges Preview */}
+                    {Boolean(formData.tags) && (
+                      <div className="flex flex-wrap gap-1.5 mt-2.5 p-3 bg-slate-950/80 border border-slate-800 rounded-xl">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider w-full mb-1">Live Badges Preview:</span>
+                        {(typeof formData.tags === "string" ? formData.tags.split(",") : formData.tags)
+                          .map((t) => (typeof t === "string" ? t.trim() : ""))
+                          .filter((t) => Boolean(t) && !t.startsWith("Category:") && !t.startsWith("cat:"))
+                          .map((tag, idx) => (
+                            <span key={idx} className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-sky-300">
+                              {tag}
+                            </span>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* PROJECT STATUS & PRICING */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">Project Status Badge</label>
+                      <select
+                        value={formData.status || "Completed"}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500"
+                      >
+                        <option value="Completed">COMPLETED</option>
+                        <option value="In Progress">IN PROGRESS</option>
+                        <option value="Development">DEVELOPMENT</option>
+                        <option value="Maintained">MAINTAINED</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">Price / Paid Tag (e.g. 8000 RS)</label>
+                      <input
+                        type="text"
+                        value={formData.price || ""}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value, paid: Boolean(e.target.value) })}
+                        placeholder="e.g. PAID - 8000 RS or 8000 RS"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500"
+                      />
+                    </div>
+                  </div>
+
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Description</label><textarea value={formData.description || ""} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Cover Image</label><input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, (url) => setFormData({ ...formData, img_url: url }))} className="text-xs text-slate-400" /></div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Documentation PDF</label><input type="file" accept="application/pdf" onChange={(e) => handleFileUpload(e, (url) => setFormData({ ...formData, doc_url: url }))} className="text-xs text-slate-400" /></div>
