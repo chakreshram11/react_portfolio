@@ -275,6 +275,14 @@ function Admin() {
     if (modalType === "skill") table = "skills";
     if (modalType === "research") table = "research";
 
+    // Proactively clean payload for known unmapped properties
+    if (table === "projects") {
+      delete payload.color;
+    }
+    if (!editingId) {
+      delete payload.id;
+    }
+
     // Format tags / tasks / skill_items
     if (typeof payload.tags === "string") {
       payload.tags = payload.tags.split(",").map((s) => s.trim()).filter(Boolean);
@@ -285,7 +293,7 @@ function Admin() {
 
     let error;
     let attempts = 0;
-    const maxAttempts = 6;
+    const maxAttempts = 10;
 
     while (attempts < maxAttempts) {
       attempts++;
@@ -299,14 +307,17 @@ function Admin() {
 
       if (!error) break;
 
-      const errMsg = error.message || "";
+      const errMsg = `${error.message || ""} ${error.details || ""} ${error.hint || ""}`;
 
       // Match missing column pattern in Supabase schema error
       // e.g. "Could not find the 'color' column of 'projects' in the schema cache"
       const match =
-        errMsg.match(/Could not find the '([^']+)' column/i) ||
-        errMsg.match(/column ["']([^"']+)["'] (?:of relation ["'][^"']+["'] )?does not exist/i) ||
-        errMsg.match(/Could not find the column '([^']+)'/i);
+        errMsg.match(/Could not find the ['"]([^'"]+)['"] column/i) ||
+        errMsg.match(/Could not find column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/Could not find the column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/column ["']?([^'"\s]+)["']? (?:of relation ["']?[^"'\s]+["']?\s+)?does not exist/i) ||
+        errMsg.match(/column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/['"]([^'"]+)['"] column/i);
 
       if (match && match[1]) {
         const missingCol = match[1];
