@@ -448,12 +448,43 @@ function Admin() {
     }
 
     let error;
-    if (profile.id) {
-      const res = await supabase.from("profile").update(payload).eq("id", profile.id);
-      error = res.error;
-    } else {
-      const res = await supabase.from("profile").insert([payload]);
-      error = res.error;
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      if (profile.id) {
+        const res = await supabase.from("profile").update(payload).eq("id", profile.id);
+        error = res.error;
+      } else {
+        const res = await supabase.from("profile").insert([payload]);
+        error = res.error;
+      }
+
+      if (!error) break;
+
+      console.warn(`Profile save attempt ${attempts} error:`, error);
+      const errMsg = `${error.message || ""} ${error.details || ""} ${error.hint || ""}`;
+
+      const match =
+        errMsg.match(/Could not find the ['"]([^'"]+)['"] column/i) ||
+        errMsg.match(/Could not find column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/Could not find the column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/column ["']?([^'"\s]+)["']? (?:of relation ["']?[^"'\s]+["']?\s+)?does not exist/i) ||
+        errMsg.match(/column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/['"]([^'"]+)['"] column/i);
+
+      if (match && match[1]) {
+        delete payload[match[1]];
+      } else if (errMsg.toLowerCase().includes("phrases") || errMsg.toLowerCase().includes("array")) {
+        if (Array.isArray(payload.phrases)) {
+          payload.phrases = payload.phrases.join(", ");
+        } else {
+          delete payload.phrases;
+        }
+      } else {
+        break;
+      }
     }
 
     setSaving(false);
