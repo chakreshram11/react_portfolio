@@ -154,8 +154,20 @@ function Projects() {
     ? projects
     : projects.filter((p) => (p.category || "Development").toLowerCase() === activeCategory.toLowerCase());
 
+  const handleCategoryClick = (cat) => {
+    setActiveCategory(cat);
+    // Smoothly focus on top of projects section if top of section is above viewport top
+    const section = document.getElementById("projects");
+    if (section) {
+      const rect = section.getBoundingClientRect();
+      if (rect.top < -50) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
   return (
-    <section id="projects" className="py-20 px-6 md:px-14 relative overflow-x-hidden" style={{ background: '#030712' }}>
+    <section id="projects" className="py-20 px-6 md:px-14 relative overflow-x-hidden min-h-[700px]" style={{ background: '#030712' }}>
 
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -186,7 +198,8 @@ function Projects() {
             return (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                type="button"
+                onClick={() => handleCategoryClick(cat)}
                 className={`relative px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all duration-300 flex items-center gap-2 ${
                   isActive
                     ? "bg-sky-500 text-dark-950 shadow-[0_0_20px_rgba(56,189,248,0.4)] scale-105"
@@ -207,7 +220,7 @@ function Projects() {
         </div>
 
         {/* Balanced Responsive Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[480px]">
           {filteredProjects.map((project, index) => {
             const ProjectIcon = project.icon || FaCode;
             const accentColor = project.color || "#38bdf8";
