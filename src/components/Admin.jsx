@@ -1120,11 +1120,26 @@ function Admin() {
 
               {/* --- ABOUT ME COUNTER STATS --- */}
               <div className="pt-6 border-t border-slate-800 space-y-4">
-                <div>
-                  <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
-                    <span className="text-emerald-400">📊</span> About Me — Counter Stats Cards
-                  </h3>
-                  <p className="text-xs text-slate-400 mb-4">Update the numerical counter statistics shown on the top-right of the About section.</p>
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                  <div>
+                    <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
+                      <span className="text-emerald-400">📊</span> About Me — Counter Stats Cards
+                    </h3>
+                    <p className="text-xs text-slate-400">Numerical statistics shown on the About section. Leave blank for ⚡ Automatic Count from database!</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setProfile({
+                      ...profile,
+                      stat_internships: "",
+                      stat_certifications: "",
+                      stat_projects: "",
+                      stat_vulns: ""
+                    })}
+                    className="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all self-start sm:self-auto"
+                  >
+                    ⚡ Auto-Calculate from DB
+                  </button>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -1134,7 +1149,7 @@ function Admin() {
                       type="text"
                       value={profile.stat_internships || ""}
                       onChange={(e) => setProfile({ ...profile, stat_internships: e.target.value })}
-                      placeholder="3+"
+                      placeholder={`Auto (${experiences.length > 0 ? experiences.length + '+' : '3+'})`}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
                     />
                   </div>
@@ -1144,7 +1159,7 @@ function Admin() {
                       type="text"
                       value={profile.stat_certifications || ""}
                       onChange={(e) => setProfile({ ...profile, stat_certifications: e.target.value })}
-                      placeholder="8+"
+                      placeholder={`Auto (${certifications.length > 0 ? certifications.length + '+' : '8+'})`}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
                     />
                   </div>
@@ -1154,7 +1169,7 @@ function Admin() {
                       type="text"
                       value={profile.stat_projects || ""}
                       onChange={(e) => setProfile({ ...profile, stat_projects: e.target.value })}
-                      placeholder="3+"
+                      placeholder={`Auto (${projects.length > 0 ? projects.length + '+' : '3+'})`}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
                     />
                   </div>
@@ -1164,7 +1179,7 @@ function Admin() {
                       type="text"
                       value={profile.stat_vulns || ""}
                       onChange={(e) => setProfile({ ...profile, stat_vulns: e.target.value })}
-                      placeholder="2"
+                      placeholder={`Auto (${research.length > 0 ? research.length : '2'})`}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
                     />
                   </div>

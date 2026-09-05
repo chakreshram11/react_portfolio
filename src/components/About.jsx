@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { FaShieldAlt, FaCode, FaCertificate, FaBriefcase, FaRocket, FaGraduationCap, FaQuoteLeft } from "react-icons/fa";
-import { fetchProfileData } from "../lib/supabase";
+import { supabase, fetchProfileData } from "../lib/supabase";
 
 const DEFAULT_TECH_STACK = [
   { name: "React", color: "#61dafb" },
@@ -53,6 +53,12 @@ function getTechColor(name) {
 
 function About() {
   const [profile, setProfile] = useState(null);
+  const [liveCounts, setLiveCounts] = useState({
+    projects: null,
+    certifications: null,
+    experiences: null,
+    research: null,
+  });
 
   useEffect(() => {
     async function loadData() {
@@ -67,6 +73,25 @@ function About() {
           }
         }
         setProfile({ ...data, ...parsedAbout });
+      }
+
+      // Fetch live table counts automatically from Supabase tables
+      try {
+        const [projRes, certRes, expRes, resRes] = await Promise.all([
+          supabase.from("projects").select("id", { count: "exact", head: true }),
+          supabase.from("certifications").select("id", { count: "exact", head: true }),
+          supabase.from("experiences").select("id", { count: "exact", head: true }),
+          supabase.from("research").select("id", { count: "exact", head: true }),
+        ]);
+
+        setLiveCounts({
+          projects: projRes.count !== null && projRes.count > 0 ? `${projRes.count}+` : null,
+          certifications: certRes.count !== null && certRes.count > 0 ? `${certRes.count}+` : null,
+          experiences: expRes.count !== null && expRes.count > 0 ? `${expRes.count}+` : null,
+          research: resRes.count !== null && resRes.count > 0 ? `${resRes.count}` : null,
+        });
+      } catch (err) {
+        console.warn("Error fetching live table stats:", err);
       }
     }
     loadData();
@@ -86,10 +111,10 @@ function About() {
   }, [profile]);
 
   const stats = [
-    { icon: FaBriefcase, value: profile?.stat_internships || "3+", label: "Internships", color: "#38bdf8" },
-    { icon: FaCertificate, value: profile?.stat_certifications || "8+", label: "Certifications", color: "#818cf8" },
-    { icon: FaCode, value: profile?.stat_projects || "3+", label: "Projects", color: "#34d399" },
-    { icon: FaShieldAlt, value: profile?.stat_vulns || "2", label: "Vulns Found", color: "#fb923c" },
+    { icon: FaBriefcase, value: profile?.stat_internships || liveCounts.experiences || "3+", label: "Internships", color: "#38bdf8" },
+    { icon: FaCertificate, value: profile?.stat_certifications || liveCounts.certifications || "8+", label: "Certifications", color: "#818cf8" },
+    { icon: FaCode, value: profile?.stat_projects || liveCounts.projects || "3+", label: "Projects", color: "#34d399" },
+    { icon: FaShieldAlt, value: profile?.stat_vulns || liveCounts.research || "2", label: "Vulns Found", color: "#fb923c" },
   ];
 
   const terminalCerts = useMemo(() => {
