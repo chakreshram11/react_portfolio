@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import {
   FaPlus, FaTrash, FaEdit, FaSignOutAlt, FaFilePdf, FaImage, FaArrowLeft,
-  FaFolder, FaAward, FaBriefcase, FaCode, FaUser, FaCheck, FaTimes, FaCamera
+  FaFolder, FaAward, FaBriefcase, FaCode, FaUser, FaCheck, FaTimes, FaCamera, FaGithub
 } from "react-icons/fa";
 
 function Admin() {
@@ -1275,6 +1275,24 @@ function Admin() {
                         className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500"
                       />
                     </div>
+                  </div>
+
+                  {/* GITHUB REPOSITORY LINK */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1 flex items-center gap-1.5">
+                      <FaGithub className="text-sky-400" />
+                      <span>GitHub Repository URL (Optional)</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={formData.github_url || formData.github || ""}
+                      onChange={(e) => setFormData({ ...formData, github_url: e.target.value, github: e.target.value })}
+                      placeholder="https://github.com/username/repository (Leave blank if none)"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
+                    />
+                    <p className="text-[10px] text-slate-500 mt-1">
+                      If provided, a "Code" button with a GitHub icon will be displayed on the project card. Leave blank to hide.
+                    </p>
                   </div>
 
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Description</label><textarea value={formData.description || ""} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
