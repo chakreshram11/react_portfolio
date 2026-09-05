@@ -291,6 +291,19 @@ function Admin() {
       payload.tasks = payload.tasks.split("\n").map((s) => s.trim()).filter(Boolean);
     }
 
+    // Embed GitHub URL in tags array so GitHub link persists reliably regardless of DB column schema
+    if (modalType === "project") {
+      const cleanGhUrl = (payload.github_url || payload.github || "").trim();
+      const existingTags = Array.isArray(payload.tags)
+        ? payload.tags.filter((t) => typeof t === "string" && !t.startsWith("Github:") && !t.startsWith("github:") && !t.startsWith("git:"))
+        : [];
+      if (cleanGhUrl) {
+        payload.tags = [...existingTags, `Github: ${cleanGhUrl}`];
+      } else {
+        payload.tags = existingTags;
+      }
+    }
+
     let error;
     let attempts = 0;
     const maxAttempts = 10;
@@ -328,6 +341,17 @@ function Admin() {
             : [];
           delete payload.category;
           payload.tags = [...existingTags, catTag];
+        } else if ((missingCol === "github_url" || missingCol === "github" || missingCol === "repo_url") && modalType === "project") {
+          const ghUrl = (payload.github_url || payload.github || payload.repo_url || "").trim();
+          const existingTags = Array.isArray(payload.tags)
+            ? payload.tags.filter((t) => typeof t === "string" && !t.startsWith("Github:") && !t.startsWith("github:") && !t.startsWith("git:"))
+            : [];
+          delete payload.github_url;
+          delete payload.github;
+          delete payload.repo_url;
+          if (ghUrl) {
+            payload.tags = [...existingTags, `Github: ${ghUrl}`];
+          }
         } else {
           delete payload[missingCol];
         }
@@ -598,10 +622,10 @@ function Admin() {
                     <p className="text-xs text-sky-400 font-semibold mb-2">{item.subtitle}</p>
                     <p className="text-xs text-slate-400 line-clamp-3 mb-3">{item.description}</p>
 
-                    {Array.isArray(item.tags) && item.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:")).length > 0 && (
+                    {Array.isArray(item.tags) && item.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:") && !t.startsWith("Github:") && !t.startsWith("github:") && !t.startsWith("git:")).length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-4">
                         {item.tags
-                          .filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:"))
+                          .filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:") && !t.startsWith("Github:") && !t.startsWith("github:") && !t.startsWith("git:"))
                           .map((tag, idx) => (
                             <span key={idx} className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-950 text-sky-300 border border-slate-800">
                               {tag}
@@ -615,12 +639,23 @@ function Admin() {
                         onClick={() => {
                           setEditingId(item.id);
                           const cleanTags = Array.isArray(item.tags)
-                            ? item.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:")).join(", ")
+                            ? item.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:") && !t.startsWith("Github:") && !t.startsWith("github:") && !t.startsWith("git:")).join(", ")
                             : item.tags || "";
+
+                          let ghUrl = item.github_url || item.github || item.repo_url || "";
+                          if (!ghUrl && Array.isArray(item.tags)) {
+                            const ghTag = item.tags.find((t) => typeof t === "string" && (t.startsWith("Github:") || t.startsWith("github:") || t.startsWith("git:")));
+                            if (ghTag) {
+                              ghUrl = ghTag.replace(/^(Github:|github:|git:)/i, "").trim();
+                            }
+                          }
+
                           setFormData({
                             ...item,
                             category: item.category || item.section || "Development",
-                            tags: cleanTags
+                            tags: cleanTags,
+                            github_url: ghUrl,
+                            github: ghUrl
                           });
                           setModalType("project");
                         }}

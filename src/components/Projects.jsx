@@ -74,9 +74,21 @@ function Projects() {
               category = DEFAULT_PROJECTS[idx % DEFAULT_PROJECTS.length]?.category || "Development";
             }
 
-            // Filter out internal category tags from public tag badges
+            // Helper to resolve github URL from columns or embedded Github tag
+            let githubUrl = item.github_url || item.github || item.repo_url;
+            if (!githubUrl && Array.isArray(item.tags)) {
+              const ghTag = item.tags.find((t) => typeof t === "string" && (t.startsWith("Github:") || t.startsWith("github:") || t.startsWith("git:")));
+              if (ghTag) {
+                githubUrl = ghTag.replace(/^(Github:|github:|git:)/i, "").trim();
+              }
+            }
+            if (!githubUrl) {
+              githubUrl = DEFAULT_PROJECTS[idx % DEFAULT_PROJECTS.length]?.github || "";
+            }
+
+            // Filter out internal category and github tags from public tag badges
             const cleanTags = (item.tags || ["Project"]).filter(
-              (t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:")
+              (t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:") && !t.startsWith("Github:") && !t.startsWith("github:") && !t.startsWith("git:")
             );
 
             return {
@@ -86,7 +98,7 @@ function Projects() {
               description: item.description,
               img: getStorageUrl(item.img_url) || DEFAULT_PROJECTS[idx % DEFAULT_PROJECTS.length].img,
               doc: getStorageUrl(item.doc_url) || DEFAULT_PROJECTS[idx % DEFAULT_PROJECTS.length].doc,
-              github: item.github_url || item.github || item.repo_url || DEFAULT_PROJECTS[idx % DEFAULT_PROJECTS.length]?.github || "",
+              github: githubUrl,
               color: item.color || "#38bdf8",
               icon: FaCode,
               category: category,
