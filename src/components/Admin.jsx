@@ -53,6 +53,7 @@ function Admin() {
   const [dbProfileCols, setDbProfileCols] = useState([]);
   const [dbProfileId, setDbProfileId] = useState(null);
   const [draggedCertIndex, setDraggedCertIndex] = useState(null);
+  const [draggedSkillIndex, setDraggedSkillIndex] = useState(null);
 
   const moveCertification = async (fromIndex, toIndex) => {
     if (toIndex < 0 || toIndex >= certifications.length) return;
@@ -71,6 +72,26 @@ function Admin() {
       );
     } catch (err) {
       console.error("Error saving reordered certifications:", err);
+    }
+  };
+
+  const moveSkillCategory = async (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= skills.length) return;
+    const updated = [...skills];
+    const [movedItem] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, movedItem);
+
+    const reordered = updated.map((item, idx) => ({ ...item, display_order: idx + 1 }));
+    setSkills(reordered);
+
+    try {
+      await Promise.all(
+        reordered.map((item) =>
+          supabase.from("skills").update({ display_order: item.display_order }).eq("id", item.id)
+        )
+      );
+    } catch (err) {
+      console.error("Error saving reordered skills:", err);
     }
   };
 
@@ -971,10 +992,14 @@ function Admin() {
         {/* --- TAB 4: SKILLS --- */}
         {activeTab === "skills" && (
           <div>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
-                <h2 className="text-xl font-bold text-white">Technical Skills & Categories</h2>
-                <p className="text-xs text-slate-400">Add or edit skill categories (Core, Backend, OS) and individual skill levels</p>
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span>Technical Skills & Categories</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  🖐️ Drag & drop category cards with your cursor or use ▲ ▼ buttons to reorder skill categories
+                </p>
               </div>
               <button
                 onClick={() => {
@@ -1017,15 +1042,68 @@ function Admin() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {skills.map((cat) => (
-                  <div key={cat.id} className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-slate-700 transition-all">
+                {skills.map((cat, catIdx) => (
+                  <div
+                    key={cat.id}
+                    draggable
+                    onDragStart={(e) => {
+                      setDraggedSkillIndex(catIdx);
+                      e.dataTransfer.effectAllowed = "move";
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = "move";
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (draggedSkillIndex !== null && draggedSkillIndex !== catIdx) {
+                        moveSkillCategory(draggedSkillIndex, catIdx);
+                        setDraggedSkillIndex(null);
+                      }
+                    }}
+                    className={`bg-slate-900/90 border rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 ${
+                      draggedSkillIndex === catIdx ? "opacity-40 border-sky-500 scale-95" : "border-slate-800 hover:border-sky-500/50"
+                    }`}
+                  >
                     <div>
+                      {/* Top Controls: Drag Grip, Order Badge & Move Up/Down buttons */}
+                      <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-slate-800/60">
+                        <div className="flex items-center gap-2">
+                          <span className="cursor-grab active:cursor-grabbing p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-sky-400 transition-colors" title="Drag with cursor to reorder">
+                            <FaGripVertical className="text-sm" />
+                          </span>
+                          <span className="text-[10px] font-mono font-bold text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded bg-sky-500/10">
+                            #{catIdx + 1}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={catIdx === 0}
+                            onClick={() => moveSkillCategory(catIdx, catIdx - 1)}
+                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-sky-500 hover:text-dark-950 text-slate-300 disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-300 transition-all text-xs"
+                            title="Move Up"
+                          >
+                            <FaArrowUp />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={catIdx === skills.length - 1}
+                            onClick={() => moveSkillCategory(catIdx, catIdx + 1)}
+                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-sky-500 hover:text-dark-950 text-slate-300 disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-300 transition-all text-xs"
+                            title="Move Down"
+                          >
+                            <FaArrowDown />
+                          </button>
+                        </div>
+                      </div>
+
                       <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                         <h3 className="font-bold text-white text-lg flex items-center gap-2">
                           <span className="w-3 h-3 rounded-full" style={{ background: cat.color || "#38bdf8" }} />
                           {cat.category}
                         </h3>
-                        <span className="text-[10px] font-mono font-bold text-slate-500">Order: {cat.display_order ?? 0}</span>
                       </div>
 
                       <div className="space-y-3 mb-4">
@@ -1595,6 +1673,36 @@ function Admin() {
                     <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
                       {Array.isArray(formData.skill_items) && formData.skill_items.map((sk, idx) => (
                         <div key={idx} className="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800">
+                          <div className="flex flex-col gap-0.5">
+                            <button
+                              type="button"
+                              disabled={idx === 0}
+                              onClick={() => {
+                                const updated = [...formData.skill_items];
+                                const [item] = updated.splice(idx, 1);
+                                updated.splice(idx - 1, 0, item);
+                                setFormData({ ...formData, skill_items: updated });
+                              }}
+                              className="text-[10px] text-slate-400 hover:text-sky-400 disabled:opacity-20"
+                              title="Move Up"
+                            >
+                              ▲
+                            </button>
+                            <button
+                              type="button"
+                              disabled={idx === formData.skill_items.length - 1}
+                              onClick={() => {
+                                const updated = [...formData.skill_items];
+                                const [item] = updated.splice(idx, 1);
+                                updated.splice(idx + 1, 0, item);
+                                setFormData({ ...formData, skill_items: updated });
+                              }}
+                              className="text-[10px] text-slate-400 hover:text-sky-400 disabled:opacity-20"
+                              title="Move Down"
+                            >
+                              ▼
+                            </button>
+                          </div>
                           <input
                             type="text"
                             value={sk.name || ""}
