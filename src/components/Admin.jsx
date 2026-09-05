@@ -49,6 +49,7 @@ function Admin() {
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [dbProfileCols, setDbProfileCols] = useState([]);
 
   // Form Fields
   const [formData, setFormData] = useState({});
@@ -112,6 +113,9 @@ function Admin() {
 
     // 5. Profile
     const { data: profileData } = await supabase.from("profile").select("*").limit(1).single();
+    if (profileData) {
+      setDbProfileCols(Object.keys(profileData));
+    }
     let metaData = {};
     try {
       const { data: userData } = await supabase.auth.getUser();
@@ -435,8 +439,8 @@ function Admin() {
       console.warn("User metadata update notice:", metaErr);
     }
 
-    // 2. Prepare database table payload with clean error handling
-    const payload = {
+    // 2. Prepare database table payload pre-filtered to existing table columns only
+    const rawPayload = {
       full_name: profile.full_name || "",
       tagline: profile.tagline || "",
       avatar_url: profile.avatar_url || "",
@@ -448,13 +452,26 @@ function Admin() {
     };
 
     if (profile.phrases) {
-      payload.phrases = typeof profile.phrases === "string"
+      rawPayload.phrases = typeof profile.phrases === "string"
         ? profile.phrases.split(",").map((p) => p.trim()).filter(Boolean)
         : profile.phrases;
     }
 
     if (profile.security_pin) {
-      payload.security_pin = profile.security_pin;
+      rawPayload.security_pin = profile.security_pin;
+    }
+
+    // Keep ONLY columns that exist in the PostgreSQL table to ensure 0 Bad Request errors
+    const payload = {};
+    if (dbProfileCols.length > 0) {
+      Object.keys(rawPayload).forEach((key) => {
+        if (dbProfileCols.includes(key)) {
+          payload[key] = rawPayload[key];
+        }
+      });
+    } else {
+      payload.full_name = profile.full_name || "";
+      payload.tagline = profile.tagline || "";
     }
 
     let error;
@@ -464,13 +481,16 @@ function Admin() {
     while (attempts < maxAttempts) {
       attempts++;
 
-      let res;
-      if (profile.id) {
-        res = await supabase.from("profile").update(payload).eq("id", profile.id);
-      } else {
-        res = await supabase.from("profile").insert([payload]);
+      // Only attempt DB update if payload has at least one column to update
+      if (Object.keys(payload).length > 0) {
+        let res;
+        if (profile.id) {
+          res = await supabase.from("profile").update(payload).eq("id", profile.id);
+        } else {
+          res = await supabase.from("profile").insert([payload]);
+        }
+        error = res.error;
       }
-      error = res.error;
 
       if (!error) break;
 
