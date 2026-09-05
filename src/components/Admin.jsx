@@ -284,29 +284,44 @@ function Admin() {
     }
 
     let error;
-    if (editingId) {
-      const res = await supabase.from(table).update(payload).eq("id", editingId);
-      error = res.error;
-    } else {
-      const res = await supabase.from(table).insert([payload]);
-      error = res.error;
-    }
+    let attempts = 0;
+    const maxAttempts = 6;
 
-    // Fallback: If category column is missing in Supabase schema, embed Category: <name> into tags array & retry saving!
-    if (error && modalType === "project" && error.message && (error.message.includes("category") || error.message.includes("column"))) {
-      const catTag = `Category: ${payload.category || "Development"}`;
-      const existingTags = Array.isArray(payload.tags)
-        ? payload.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:"))
-        : [];
-      delete payload.category;
-      payload.tags = [...existingTags, catTag];
-
+    while (attempts < maxAttempts) {
+      attempts++;
       if (editingId) {
         const res = await supabase.from(table).update(payload).eq("id", editingId);
         error = res.error;
       } else {
         const res = await supabase.from(table).insert([payload]);
         error = res.error;
+      }
+
+      if (!error) break;
+
+      const errMsg = error.message || "";
+
+      // Match missing column pattern in Supabase schema error
+      // e.g. "Could not find the 'color' column of 'projects' in the schema cache"
+      const match =
+        errMsg.match(/Could not find the '([^']+)' column/i) ||
+        errMsg.match(/column ["']([^"']+)["'] (?:of relation ["'][^"']+["'] )?does not exist/i) ||
+        errMsg.match(/Could not find the column '([^']+)'/i);
+
+      if (match && match[1]) {
+        const missingCol = match[1];
+        if (missingCol === "category" && modalType === "project") {
+          const catTag = `Category: ${payload.category || "Development"}`;
+          const existingTags = Array.isArray(payload.tags)
+            ? payload.tags.filter((t) => typeof t === "string" && !t.startsWith("Category:") && !t.startsWith("cat:"))
+            : [];
+          delete payload.category;
+          payload.tags = [...existingTags, catTag];
+        } else {
+          delete payload[missingCol];
+        }
+      } else {
+        break;
       }
     }
 
@@ -545,7 +560,7 @@ function Admin() {
               <button
                 onClick={() => {
                   setEditingId(null);
-                  setFormData({ status: "Completed", category: "Development", paid: false, color: "#38bdf8", display_order: projects.length + 1 });
+                  setFormData({ status: "Completed", category: "Development", paid: false, display_order: projects.length + 1 });
                   setModalType("project");
                 }}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-dark-950 font-bold text-xs shadow-lg shadow-sky-500/20"
