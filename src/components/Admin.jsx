@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import {
   FaPlus, FaTrash, FaEdit, FaSignOutAlt, FaFilePdf, FaImage, FaArrowLeft,
-  FaFolder, FaAward, FaBriefcase, FaCode, FaUser, FaCheck, FaTimes, FaCamera, FaGithub
+  FaFolder, FaAward, FaBriefcase, FaCode, FaUser, FaCheck, FaTimes, FaCamera, FaGithub,
+  FaArrowUp, FaArrowDown, FaGripVertical
 } from "react-icons/fa";
 
 function Admin() {
@@ -51,6 +52,27 @@ function Admin() {
   const [uploading, setUploading] = useState(false);
   const [dbProfileCols, setDbProfileCols] = useState([]);
   const [dbProfileId, setDbProfileId] = useState(null);
+  const [draggedCertIndex, setDraggedCertIndex] = useState(null);
+
+  const moveCertification = async (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= certifications.length) return;
+    const updated = [...certifications];
+    const [movedItem] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, movedItem);
+
+    const reordered = updated.map((item, idx) => ({ ...item, display_order: idx + 1 }));
+    setCertifications(reordered);
+
+    try {
+      await Promise.all(
+        reordered.map((item) =>
+          supabase.from("certifications").update({ display_order: item.display_order }).eq("id", item.id)
+        )
+      );
+    } catch (err) {
+      console.error("Error saving reordered certifications:", err);
+    }
+  };
 
   // Form Fields
   const [formData, setFormData] = useState({});
@@ -805,10 +827,14 @@ function Admin() {
         {/* --- TAB 2: CERTIFICATIONS --- */}
         {activeTab === "certifications" && (
           <div>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
-                <h2 className="text-xl font-bold text-white">Certifications & Training</h2>
-                <p className="text-xs text-slate-400">Add course certificates and verification credentials</p>
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span>Certifications & Training</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  🖐️ Drag & drop cards with your cursor or use ▲ ▼ buttons to place main certifications at the top
+                </p>
               </div>
               <button
                 onClick={() => {
@@ -824,22 +850,76 @@ function Admin() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {certifications.map((item, idx) => (
-                <div key={item.id} className="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition-all">
+                <div
+                  key={item.id}
+                  draggable
+                  onDragStart={(e) => {
+                    setDraggedCertIndex(idx);
+                    e.dataTransfer.effectAllowed = "move";
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (draggedCertIndex !== null && draggedCertIndex !== idx) {
+                      moveCertification(draggedCertIndex, idx);
+                      setDraggedCertIndex(null);
+                    }
+                  }}
+                  className={`bg-slate-900/90 border rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${
+                    draggedCertIndex === idx ? "opacity-40 border-sky-500 scale-95" : "border-slate-800/80 hover:border-sky-500/50"
+                  }`}
+                >
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[10px] font-mono font-bold text-sky-400 border border-slate-800 px-2 py-0.5 rounded bg-slate-950">
-                        Order: {item.display_order ?? idx + 1}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-500">{item.date}</span>
+                    {/* Top Controls: Drag Grip, Order Badge & Move Up/Down buttons */}
+                    <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-slate-800/60">
+                      <div className="flex items-center gap-2">
+                        <span className="cursor-grab active:cursor-grabbing p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-sky-400 transition-colors" title="Drag with cursor to reorder">
+                          <FaGripVertical className="text-sm" />
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded bg-sky-500/10">
+                          #{idx + 1}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => moveCertification(idx, idx - 1)}
+                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-sky-500 hover:text-dark-950 text-slate-300 disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-300 transition-all text-xs"
+                          title="Move Up"
+                        >
+                          <FaArrowUp />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === certifications.length - 1}
+                          onClick={() => moveCertification(idx, idx + 1)}
+                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-sky-500 hover:text-dark-950 text-slate-300 disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-300 transition-all text-xs"
+                          title="Move Down"
+                        >
+                          <FaArrowDown />
+                        </button>
+                      </div>
                     </div>
+
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <h3 className="font-bold text-white text-base leading-snug">{item.title}</h3>
+                      <span className="text-[10px] font-bold text-slate-500 shrink-0">{item.date}</span>
+                    </div>
+
                     {item.image_url ? (
                       <img src={item.image_url} alt={item.title} className="w-full h-36 object-contain mb-3 rounded-xl bg-slate-950 p-2 border border-slate-800" />
                     ) : (
                       <div className="w-full h-36 bg-slate-950 rounded-xl mb-3 flex items-center justify-center text-xs text-slate-600">No Certificate Image</div>
                     )}
-                    <h3 className="font-bold text-white text-base leading-snug">{item.title}</h3>
-                    <p className="text-xs text-slate-400 mt-1 font-semibold">{item.organization}</p>
+
+                    <p className="text-xs text-slate-400 font-semibold">{item.organization}</p>
                   </div>
+
                   <div className="flex gap-2 mt-5 pt-3 border-t border-slate-800">
                     <button onClick={() => { setEditingId(item.id); setFormData(item); setModalType("cert"); }} className="flex-1 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all">Edit</button>
                     <button onClick={() => handleDeleteItem("certifications", item.id, item.title)} className="flex-1 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold transition-all">Delete</button>
