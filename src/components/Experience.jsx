@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FaCalendarAlt, FaFilePdf, FaBriefcase, FaClock, FaLaptopCode, FaShieldAlt, FaTools, FaChevronRight, FaRegCheckCircle, FaPlus } from "react-icons/fa";
 import { supabase } from "../lib/supabase";
 
@@ -85,11 +85,57 @@ function Experience() {
     fetchExperiences();
   }, []);
 
+  // Automatic Calculation of Professional Experience Highlights
+  const totalMonths = useMemo(() => {
+    let months = 0;
+    experiences.forEach((exp) => {
+      const dur = String(exp.duration || "").toLowerCase();
+      const numMatch = dur.match(/\d+/);
+      if (numMatch) {
+        const val = parseInt(numMatch[0], 10);
+        if (dur.includes("year")) {
+          months += val * 12;
+        } else {
+          months += val;
+        }
+      }
+    });
+    return months > 0 ? `${months}+` : "12+";
+  }, [experiences]);
+
+  const totalTechDomains = useMemo(() => {
+    const set = new Set();
+    experiences.forEach((exp) => {
+      if (Array.isArray(exp.tags)) {
+        exp.tags.forEach((tag) => {
+          if (tag && typeof tag === "string") set.add(tag.trim());
+        });
+      }
+    });
+    return set.size > 0 ? `${set.size}+` : "5+";
+  }, [experiences]);
+
+  const securityRolesCount = useMemo(() => {
+    const securityKeywords = ["security", "cve", "cyber", "pentest", "audit", "vulnerability", "content engineer", "soc", "secops", "devsecops"];
+    let count = 0;
+    experiences.forEach((exp) => {
+      const roleStr = String(exp.role || "").toLowerCase();
+      const compStr = String(exp.company || "").toLowerCase();
+      const tagsStr = Array.isArray(exp.tags) ? exp.tags.join(" ").toLowerCase() : "";
+      const fullText = `${roleStr} ${compStr} ${tagsStr}`;
+
+      if (securityKeywords.some((kw) => fullText.includes(kw))) {
+        count++;
+      }
+    });
+    return count > 0 ? `${count}` : "2";
+  }, [experiences]);
+
   const highlights = [
     { icon: FaBriefcase, value: `${experiences.length}`, label: "Companies", color: "#38bdf8" },
-    { icon: FaClock, value: "12+", label: "Months Experience", color: "#818cf8" },
-    { icon: FaLaptopCode, value: "5+", label: "Tech Domains", color: "#34d399" },
-    { icon: FaShieldAlt, value: "2", label: "Security Roles", color: "#fb923c" },
+    { icon: FaClock, value: totalMonths, label: "Months Experience", color: "#818cf8" },
+    { icon: FaLaptopCode, value: totalTechDomains, label: "Tech Domains", color: "#34d399" },
+    { icon: FaShieldAlt, value: securityRolesCount, label: "Security Roles", color: "#fb923c" },
   ];
 
   return (
