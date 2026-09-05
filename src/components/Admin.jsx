@@ -758,16 +758,22 @@ function Admin() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {certifications.map((item) => (
+              {certifications.map((item, idx) => (
                 <div key={item.id} className="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition-all">
                   <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[10px] font-mono font-bold text-sky-400 border border-slate-800 px-2 py-0.5 rounded bg-slate-950">
+                        Order: {item.display_order ?? idx + 1}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-500">{item.date}</span>
+                    </div>
                     {item.image_url ? (
                       <img src={item.image_url} alt={item.title} className="w-full h-36 object-contain mb-3 rounded-xl bg-slate-950 p-2 border border-slate-800" />
                     ) : (
                       <div className="w-full h-36 bg-slate-950 rounded-xl mb-3 flex items-center justify-center text-xs text-slate-600">No Certificate Image</div>
                     )}
                     <h3 className="font-bold text-white text-base leading-snug">{item.title}</h3>
-                    <p className="text-xs text-slate-400 mt-1 font-semibold">{item.organization} · {item.date}</p>
+                    <p className="text-xs text-slate-400 mt-1 font-semibold">{item.organization}</p>
                   </div>
                   <div className="flex gap-2 mt-5 pt-3 border-t border-slate-800">
                     <button onClick={() => { setEditingId(item.id); setFormData(item); setModalType("cert"); }} className="flex-1 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 text-xs font-bold transition-all">Edit</button>
@@ -1206,16 +1212,16 @@ function Admin() {
                   <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
                     <span className="text-indigo-400">💻</span> Terminal Box — <code className="text-sky-400 font-mono text-xs">about-me.sh</code>
                   </h3>
-                  <p className="text-xs text-slate-400 mb-4">Edit the terminal shell output for <code className="text-sky-400">cat certifications.txt</code> and <code className="text-sky-400">echo $GOALS</code>.</p>
+                  <p className="text-xs text-slate-400 mb-4">Leave terminal certs blank to ⚡ Auto-Load from your Certifications table by sequence number!</p>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Terminal Certifications Output (One per line)</label>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Terminal Certifications Output (One per line — Leave blank for Auto-DB sequence)</label>
                   <textarea
                     value={profile.terminal_certs || ""}
                     onChange={(e) => setProfile({ ...profile, terminal_certs: e.target.value })}
-                    rows={4}
-                    placeholder={`Cyber Security Awareness Training — Amazon\nIntroduction to AI — Great Learning\nZscaler Networking Virtual Internship — AICTE\nPalo Alto Cybersecurity Virtual Internship — AICTE`}
+                    rows={3}
+                    placeholder="⚡ Auto-loaded from Certifications database table (ordered by Sequence Number, #1 on top)!"
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-300 font-mono focus:border-sky-500"
                   />
                 </div>
@@ -1250,16 +1256,16 @@ function Admin() {
                   <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
                     <span className="text-purple-400">⚡</span> Tech Stack & Current Focus
                   </h3>
-                  <p className="text-xs text-slate-400 mb-4">Customize the tech stack pill tags and current focus checklist items.</p>
+                  <p className="text-xs text-slate-400 mb-4">Leave tech stack blank to ⚡ Auto-Compile from your Skills & Projects database tables!</p>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">About Tech Stack Badges (Comma Separated)</label>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">About Tech Stack Badges (Comma Separated — Leave blank for Auto-DB compile)</label>
                   <input
                     type="text"
                     value={profile.tech_stack_items || ""}
                     onChange={(e) => setProfile({ ...profile, tech_stack_items: e.target.value })}
-                    placeholder="React, JavaScript, Python, Node.js, HTML, CSS, Flask, Firebase, Kali Linux, Java, Express, Tailwind"
+                    placeholder="⚡ Auto-compiled from Skills & Projects database tables!"
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-sky-400 font-medium focus:border-sky-500"
                   />
                 </div>
@@ -1609,7 +1615,18 @@ function Admin() {
                 <>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Title *</label><input type="text" value={formData.title || ""} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Organization</label><input type="text" value={formData.organization || ""} onChange={(e) => setFormData({ ...formData, organization: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
-                  <div><label className="block text-xs font-bold text-slate-300 mb-1">Date</label><input type="text" value={formData.date || ""} onChange={(e) => setFormData({ ...formData, date: e.target.value })} placeholder="Nov 2024" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="block text-xs font-bold text-slate-300 mb-1">Date</label><input type="text" value={formData.date || ""} onChange={(e) => setFormData({ ...formData, date: e.target.value })} placeholder="Nov 2024" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white" /></div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1">Sequence Number (1 = Top)</label>
+                      <input
+                        type="number"
+                        value={formData.display_order ?? 1}
+                        onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value, 10) || 1 })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-sky-400 font-bold"
+                      />
+                    </div>
+                  </div>
                   <div><label className="block text-xs font-bold text-slate-300 mb-1">Certificate Image</label><input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, (url) => setFormData({ ...formData, image_url: url }))} className="text-xs text-slate-400" /></div>
                 </>
               )}

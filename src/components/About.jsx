@@ -59,6 +59,8 @@ function About() {
     experiences: null,
     research: null,
   });
+  const [dbCerts, setDbCerts] = useState([]);
+  const [dbTechStack, setDbTechStack] = useState([]);
 
   useEffect(() => {
     async function loadData() {
@@ -75,23 +77,71 @@ function About() {
         setProfile({ ...data, ...parsedAbout });
       }
 
-      // Fetch live table counts automatically from Supabase tables
+      // Fetch live table counts, certifications sequence, and dynamic tech stack
       try {
-        const [projRes, certRes, expRes, resRes] = await Promise.all([
+        const [projRes, certRes, expRes, resRes, skillsRes, projectsRes] = await Promise.all([
           supabase.from("projects").select("id", { count: "exact", head: true }),
-          supabase.from("certifications").select("id", { count: "exact", head: true }),
+          supabase.from("certifications").select("*").order("display_order", { ascending: true }),
           supabase.from("experiences").select("id", { count: "exact", head: true }),
           supabase.from("research").select("id", { count: "exact", head: true }),
+          supabase.from("skills").select("skill_items"),
+          supabase.from("projects").select("tags"),
         ]);
 
         setLiveCounts({
           projects: projRes.count !== null && projRes.count > 0 ? `${projRes.count}+` : null,
-          certifications: certRes.count !== null && certRes.count > 0 ? `${certRes.count}+` : null,
+          certifications: certRes.data?.length ? `${certRes.data.length}+` : null,
           experiences: expRes.count !== null && expRes.count > 0 ? `${expRes.count}+` : null,
           research: resRes.count !== null && resRes.count > 0 ? `${resRes.count}` : null,
         });
+
+        // 1. Process Certifications sequence order for cat certifications.txt
+        if (certRes.data && certRes.data.length > 0) {
+          const formattedCerts = certRes.data.map((c) =>
+            c.organization ? `${c.title} — ${c.organization}` : c.title
+          );
+          setDbCerts(formattedCerts);
+        }
+
+        // 2. Automatically compile dynamic tech stack from skills & project tags
+        const techSet = new Set();
+        if (skillsRes.data) {
+          skillsRes.data.forEach((cat) => {
+            if (Array.isArray(cat.skill_items)) {
+              cat.skill_items.forEach((item) => {
+                if (item && item.name) techSet.add(item.name.trim());
+              });
+            }
+          });
+        }
+        if (projectsRes.data) {
+          projectsRes.data.forEach((p) => {
+            if (Array.isArray(p.tags)) {
+              p.tags.forEach((tag) => {
+                if (
+                  typeof tag === "string" &&
+                  !tag.startsWith("Category:") &&
+                  !tag.startsWith("cat:") &&
+                  !tag.startsWith("Github:") &&
+                  !tag.startsWith("github:") &&
+                  !tag.startsWith("git:")
+                ) {
+                  techSet.add(tag.trim());
+                }
+              });
+            }
+          });
+        }
+
+        if (techSet.size > 0) {
+          const compiled = Array.from(techSet).map((name) => ({
+            name,
+            color: getTechColor(name),
+          }));
+          setDbTechStack(compiled);
+        }
       } catch (err) {
-        console.warn("Error fetching live table stats:", err);
+        console.warn("Error fetching dynamic stats & certifications:", err);
       }
     }
     loadData();
@@ -118,22 +168,30 @@ function About() {
   ];
 
   const terminalCerts = useMemo(() => {
+    // 1. If user explicitly provided terminal_certs in profile, use it
     if (profile?.terminal_certs) {
       if (Array.isArray(profile.terminal_certs)) return profile.terminal_certs;
-      return String(profile.terminal_certs).split("\n").map((s) => s.trim()).filter(Boolean);
+      const custom = String(profile.terminal_certs).split("\n").map((s) => s.trim()).filter(Boolean);
+      if (custom.length > 0) return custom;
     }
+    // 2. Otherwise auto-calculate directly from Certifications database table (ordered by sequence number)
+    if (dbCerts.length > 0) {
+      return dbCerts;
+    }
+    // 3. Fallback default
     return [
       "Cyber Security Awareness Training — Amazon",
       "Introduction to AI — Great Learning",
       "Zscaler Networking Virtual Internship — AICTE",
       "Palo Alto Cybersecurity Virtual Internship — AICTE",
     ];
-  }, [profile]);
+  }, [profile, dbCerts]);
 
   const goalShort = profile?.goal_short || "Secure a role in cybersecurity.";
   const goalLong = profile?.goal_long || "Grow into a senior security engineer while continuously learning.";
 
   const techStack = useMemo(() => {
+    // 1. If user explicitly provided tech_stack_items in profile, use it
     if (profile?.tech_stack_items) {
       const rawList = Array.isArray(profile.tech_stack_items)
         ? profile.tech_stack_items
@@ -143,8 +201,13 @@ function About() {
         return rawList.map((item) => ({ name: item, color: getTechColor(item) }));
       }
     }
+    // 2. Otherwise auto-calculate directly from Skills & Projects tables in database
+    if (dbTechStack.length > 0) {
+      return dbTechStack;
+    }
+    // 3. Fallback default
     return DEFAULT_TECH_STACK;
-  }, [profile]);
+  }, [profile, dbTechStack]);
 
   const currentFocus = useMemo(() => {
     if (profile?.current_focus_items) {
