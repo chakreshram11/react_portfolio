@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaDownload, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt, FaCode, FaGithub } from "react-icons/fa";
+import { FaDownload, FaPython, FaReact, FaShieldAlt, FaExternalLinkAlt, FaCode, FaGithub, FaNetworkWired, FaLock } from "react-icons/fa";
 import { supabase, getStorageUrl } from "../lib/supabase";
 
 const DEFAULT_PROJECTS = [
@@ -43,6 +43,34 @@ const DEFAULT_PROJECTS = [
     icon: FaShieldAlt,
     category: "Networking",
     tags: ["Web Dev", "UI/UX", "Community", "Security"],
+    status: "Completed",
+    paid: false,
+  },
+  {
+    id: 4,
+    title: "Enterprise VLAN & Routing Topology",
+    subtitle: "Multi-Switch Cisco Packet Tracer Lab",
+    description: "Architected and simulated a segmented enterprise network topology using VLANs, Trunking (802.1Q), Inter-VLAN routing, and OSPF in Cisco Packet Tracer.",
+    img: getStorageUrl("projects/networking_lab.webp"),
+    doc: getStorageUrl("projects/networking_lab_doc.pdf"),
+    color: "#06b6d4",
+    icon: FaNetworkWired,
+    category: "Networking Labs",
+    tags: ["Cisco", "Packet Tracer", "VLAN", "OSPF", "Routing"],
+    status: "Completed",
+    paid: false,
+  },
+  {
+    id: 5,
+    title: "Active Directory & SIEM Threat Detection Lab",
+    subtitle: "Multi-Node Blue Team Security Lab",
+    description: "Built a Windows Active Directory domain controller and joined virtual workstations monitored with Sysmon and Splunk SIEM for threat hunting.",
+    img: getStorageUrl("projects/security_lab.webp"),
+    doc: getStorageUrl("projects/security_lab_doc.pdf"),
+    color: "#a855f7",
+    icon: FaLock,
+    category: "Security Lab",
+    tags: ["Active Directory", "Splunk", "Sysmon", "Blue Team", "Threat Hunting"],
     status: "Completed",
     paid: false,
   },

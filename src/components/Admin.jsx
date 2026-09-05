@@ -1750,7 +1750,7 @@ function Admin() {
                   <div>
                     <label className="block text-xs font-bold text-slate-300 mb-1">Sub-Section / Category *</label>
                     <div className="flex flex-wrap gap-2 mb-2">
-                      {["Development", "Security", "Networking", "Tools"].map((preset) => (
+                      {["Development", "Security", "Networking", "Networking Labs", "Security Lab", "Tools"].map((preset) => (
                         <button
                           key={preset}
                           type="button"
@@ -1769,7 +1769,7 @@ function Admin() {
                       type="text"
                       value={formData.category || ""}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      placeholder="Enter or select sub-section (e.g. Development, Security, Networking)"
+                      placeholder="Enter or select sub-section (e.g. Development, Security, Networking Labs, Security Lab)"
                       required
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-sky-500"
                     />
