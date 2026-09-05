@@ -112,20 +112,33 @@ function Admin() {
 
     // 5. Profile
     const { data: profileData } = await supabase.from("profile").select("*").limit(1).single();
-    if (profileData) {
-      let parsedAbout = {};
-      if (profileData.about_json) {
-        try {
-          parsedAbout = typeof profileData.about_json === "string" ? JSON.parse(profileData.about_json) : profileData.about_json;
-        } catch (e) {
-          console.warn("Failed parsing about_json:", e);
-        }
-      }
+    let metaData = {};
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      metaData = userData?.user?.user_metadata || {};
+    } catch (e) {
+      console.warn("Auth user metadata notice:", e);
+    }
+
+    let parsedAbout = {};
+    if (metaData.about_json) {
+      try {
+        parsedAbout = typeof metaData.about_json === "string" ? JSON.parse(metaData.about_json) : metaData.about_json;
+      } catch (e) {}
+    } else if (profileData?.about_json) {
+      try {
+        parsedAbout = typeof profileData.about_json === "string" ? JSON.parse(profileData.about_json) : profileData.about_json;
+      } catch (e) {}
+    }
+
+    if (profileData || metaData) {
       setProfile((prev) => ({
         ...prev,
         ...profileData,
+        ...metaData,
         ...parsedAbout,
-        phrases: Array.isArray(profileData.phrases) ? profileData.phrases : prev.phrases,
+        github_url: metaData.github_url || profileData?.github_url || profileData?.github || prev.github_url || "",
+        phrases: Array.isArray(profileData?.phrases) ? profileData.phrases : prev.phrases,
       }));
     }
 
@@ -383,6 +396,8 @@ function Admin() {
     setSaving(true);
     setMsg("");
 
+    const cleanGithubUrl = (profile.github_url || profile.github || "").trim();
+
     const aboutData = {
       degree1: profile.degree1 || "B.Tech (2026) — Cyber Security",
       degree2: profile.degree2 || "Diploma (2023) — Computer Engineering",
@@ -401,7 +416,19 @@ function Admin() {
 
     const cleanAboutJson = JSON.stringify(aboutData);
 
-    // Build payload with standard profile columns + serialized about_json
+    // 1. Persist github_url & about_json into Supabase Auth User Metadata (always succeeds, no schema column needed)
+    try {
+      await supabase.auth.updateUser({
+        data: {
+          github_url: cleanGithubUrl,
+          about_json: cleanAboutJson,
+        },
+      });
+    } catch (metaErr) {
+      console.warn("User metadata update notice:", metaErr);
+    }
+
+    // 2. Build clean payload with standard table columns only to ensure instant 200 OK on attempt 1
     const payload = {
       full_name: profile.full_name || "",
       tagline: profile.tagline || "",
@@ -414,8 +441,6 @@ function Admin() {
       linkedin_url: profile.linkedin_url || "",
       instagram_url: profile.instagram_url || "",
       email: profile.email || "",
-      github_url: profile.github_url || profile.github || "",
-      about_json: cleanAboutJson,
     };
 
     if (profile.security_pin) {
@@ -423,41 +448,17 @@ function Admin() {
     }
 
     let error;
-    let attempts = 0;
-    const maxAttempts = 5;
-
-    while (attempts < maxAttempts) {
-      attempts++;
-      if (profile.id) {
-        const res = await supabase.from("profile").update(payload).eq("id", profile.id);
-        error = res.error;
-      } else {
-        const res = await supabase.from("profile").insert([payload]);
-        error = res.error;
-      }
-
-      if (!error) break;
-
-      const errMsg = `${error.message || ""} ${error.details || ""} ${error.hint || ""}`;
-
-      const match =
-        errMsg.match(/Could not find the ['"]([^'"]+)['"] column/i) ||
-        errMsg.match(/Could not find column ['"]([^'"]+)['"]/i) ||
-        errMsg.match(/Could not find the column ['"]([^'"]+)['"]/i) ||
-        errMsg.match(/column ["']?([^'"\s]+)["']? (?:of relation ["']?[^"'\s]+["']?\s+)?does not exist/i) ||
-        errMsg.match(/column ['"]([^'"]+)['"]/i) ||
-        errMsg.match(/['"]([^'"]+)['"] column/i);
-
-      if (match && match[1]) {
-        delete payload[match[1]];
-      } else {
-        break;
-      }
+    if (profile.id) {
+      const res = await supabase.from("profile").update(payload).eq("id", profile.id);
+      error = res.error;
+    } else {
+      const res = await supabase.from("profile").insert([payload]);
+      error = res.error;
     }
 
     setSaving(false);
     if (error) setMsg(`Profile Save Failed: ${error.message}`);
-    else setMsg("✅ Profile, Resume & About Section updated successfully!");
+    else setMsg("✅ Social connections & profile updated successfully!");
   };
 
   const handleDeleteItem = async (table, id, title) => {

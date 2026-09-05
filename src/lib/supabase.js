@@ -28,19 +28,38 @@ export function getStorageUrl(path, bucket = 'portfolio-assets') {
 }
 
 /**
- * Helper to fetch profile row from Supabase
+ * Helper to fetch profile row from Supabase + User metadata fallback
  */
 export async function fetchProfileData() {
   try {
-    const { data, error } = await supabase.from('profile').select('*').limit(1).single();
-    if (error) {
-      console.error('Error fetching profile:', error);
-      return null;
+    const { data: profileData } = await supabase.from('profile').select('*').limit(1).single();
+    let metaData = {};
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      metaData = userData?.user?.user_metadata || {};
+    } catch (e) {
+      console.warn('Metadata fetch notice:', e);
     }
-    return data;
+
+    let parsedAbout = {};
+    if (metaData.about_json) {
+      try {
+        parsedAbout = typeof metaData.about_json === 'string' ? JSON.parse(metaData.about_json) : metaData.about_json;
+      } catch (e) {}
+    } else if (profileData?.about_json) {
+      try {
+        parsedAbout = typeof profileData.about_json === 'string' ? JSON.parse(profileData.about_json) : profileData.about_json;
+      } catch (e) {}
+    }
+
+    return {
+      ...(profileData || {}),
+      ...(metaData || {}),
+      ...parsedAbout,
+      github_url: metaData.github_url || profileData?.github_url || profileData?.github || '',
+    };
   } catch (err) {
     console.error('Supabase profile fetch error:', err);
     return null;
   }
 }
-
