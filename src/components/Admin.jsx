@@ -113,9 +113,18 @@ function Admin() {
     // 5. Profile
     const { data: profileData } = await supabase.from("profile").select("*").limit(1).single();
     if (profileData) {
+      let parsedAbout = {};
+      if (profileData.about_json) {
+        try {
+          parsedAbout = typeof profileData.about_json === "string" ? JSON.parse(profileData.about_json) : profileData.about_json;
+        } catch (e) {
+          console.warn("Failed parsing about_json:", e);
+        }
+      }
       setProfile((prev) => ({
         ...prev,
         ...profileData,
+        ...parsedAbout,
         phrases: Array.isArray(profileData.phrases) ? profileData.phrases : prev.phrases,
       }));
     }
@@ -374,25 +383,67 @@ function Admin() {
     setSaving(true);
     setMsg("");
 
+    const aboutData = {
+      degree1: profile.degree1 || "B.Tech (2026) — Cyber Security",
+      degree2: profile.degree2 || "Diploma (2023) — Computer Engineering",
+      about_bio: profile.about_bio || "I am a dedicated cybersecurity and full-stack development enthusiast with a strong focus on building secure, scalable applications. I thrive at the intersection of development and security — writing code that's resilient by design.",
+      who_i_am_badges: profile.who_i_am_badges || "Full Stack Dev, Cyber Security, Ethical Hacking",
+      stat_internships: profile.stat_internships || "3+",
+      stat_certifications: profile.stat_certifications || "8+",
+      stat_projects: profile.stat_projects || "3+",
+      stat_vulns: profile.stat_vulns || "2",
+      terminal_certs: profile.terminal_certs || "Cyber Security Awareness Training — Amazon\nIntroduction to AI — Great Learning\nZscaler Networking Virtual Internship — AICTE\nPalo Alto Cybersecurity Virtual Internship — AICTE",
+      goal_short: profile.goal_short || "Secure a role in cybersecurity.",
+      goal_long: profile.goal_long || "Grow into a senior security engineer while continuously learning.",
+      tech_stack_items: profile.tech_stack_items || "React, JavaScript, Python, Node.js, HTML, CSS, Flask, Firebase, Kali Linux, Java, Express, Tailwind",
+      current_focus_items: profile.current_focus_items || "Security Research, Full Stack Projects, Cloud Platforms",
+    };
+
     const payload = {
       ...profile,
+      ...aboutData,
+      about_json: JSON.stringify(aboutData),
       phrases: typeof profile.phrases === "string"
         ? profile.phrases.split(",").map((p) => p.trim()).filter(Boolean)
         : profile.phrases,
     };
 
     let error;
-    if (profile.id) {
-      const res = await supabase.from("profile").update(payload).eq("id", profile.id);
-      error = res.error;
-    } else {
-      const res = await supabase.from("profile").insert([payload]);
-      error = res.error;
+    let attempts = 0;
+    const maxAttempts = 15;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      if (profile.id) {
+        const res = await supabase.from("profile").update(payload).eq("id", profile.id);
+        error = res.error;
+      } else {
+        const res = await supabase.from("profile").insert([payload]);
+        error = res.error;
+      }
+
+      if (!error) break;
+
+      const errMsg = `${error.message || ""} ${error.details || ""} ${error.hint || ""}`;
+
+      const match =
+        errMsg.match(/Could not find the ['"]([^'"]+)['"] column/i) ||
+        errMsg.match(/Could not find column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/Could not find the column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/column ["']?([^'"\s]+)["']? (?:of relation ["']?[^"'\s]+["']?\s+)?does not exist/i) ||
+        errMsg.match(/column ['"]([^'"]+)['"]/i) ||
+        errMsg.match(/['"]([^'"]+)['"] column/i);
+
+      if (match && match[1]) {
+        delete payload[match[1]];
+      } else {
+        break;
+      }
     }
 
     setSaving(false);
     if (error) setMsg(`Profile Save Failed: ${error.message}`);
-    else setMsg("✅ Profile & Resume updated successfully!");
+    else setMsg("✅ Profile, Resume & About Section updated successfully!");
   };
 
   const handleDeleteItem = async (table, id, title) => {
@@ -1009,6 +1060,190 @@ function Admin() {
                     <input type="file" accept="application/pdf" onChange={(e) => handleFileUpload(e, (url) => setProfile({ ...profile, resume_url: url }))} className="hidden" />
                   </label>
                   {profile.resume_url && <span className="text-xs font-bold text-emerald-400">✓ PDF File Attached</span>}
+                </div>
+              </div>
+
+              {/* --- ABOUT ME SECTION SETTINGS --- */}
+              <div className="pt-6 border-t border-slate-800 space-y-6">
+                <div>
+                  <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
+                    <span className="text-sky-400">🎓</span> About Me — "Who I Am" & Degrees
+                  </h3>
+                  <p className="text-xs text-slate-400 mb-4">Customize the main bio, education titles, and highlight badges in the About Me section.</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Degree / Education 1</label>
+                    <input
+                      type="text"
+                      value={profile.degree1 || ""}
+                      onChange={(e) => setProfile({ ...profile, degree1: e.target.value })}
+                      placeholder="B.Tech (2026) — Cyber Security"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-sky-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Degree / Education 2</label>
+                    <input
+                      type="text"
+                      value={profile.degree2 || ""}
+                      onChange={(e) => setProfile({ ...profile, degree2: e.target.value })}
+                      placeholder="Diploma (2023) — Computer Engineering"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-sky-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Who I Am — Main Bio Paragraph</label>
+                  <textarea
+                    value={profile.about_bio || ""}
+                    onChange={(e) => setProfile({ ...profile, about_bio: e.target.value })}
+                    rows={3}
+                    placeholder="I am a dedicated cybersecurity and full-stack development enthusiast with a strong focus on building secure, scalable applications..."
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Who I Am — Highlight Badges (Comma Separated)</label>
+                  <input
+                    type="text"
+                    value={profile.who_i_am_badges || ""}
+                    onChange={(e) => setProfile({ ...profile, who_i_am_badges: e.target.value })}
+                    placeholder="Full Stack Dev, Cyber Security, Ethical Hacking"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-sky-400 font-medium focus:border-sky-500"
+                  />
+                </div>
+              </div>
+
+              {/* --- ABOUT ME COUNTER STATS --- */}
+              <div className="pt-6 border-t border-slate-800 space-y-4">
+                <div>
+                  <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
+                    <span className="text-emerald-400">📊</span> About Me — Counter Stats Cards
+                  </h3>
+                  <p className="text-xs text-slate-400 mb-4">Update the numerical counter statistics shown on the top-right of the About section.</p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Internships</label>
+                    <input
+                      type="text"
+                      value={profile.stat_internships || ""}
+                      onChange={(e) => setProfile({ ...profile, stat_internships: e.target.value })}
+                      placeholder="3+"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Certifications</label>
+                    <input
+                      type="text"
+                      value={profile.stat_certifications || ""}
+                      onChange={(e) => setProfile({ ...profile, stat_certifications: e.target.value })}
+                      placeholder="8+"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Projects</label>
+                    <input
+                      type="text"
+                      value={profile.stat_projects || ""}
+                      onChange={(e) => setProfile({ ...profile, stat_projects: e.target.value })}
+                      placeholder="3+"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Vulns Found</label>
+                    <input
+                      type="text"
+                      value={profile.stat_vulns || ""}
+                      onChange={(e) => setProfile({ ...profile, stat_vulns: e.target.value })}
+                      placeholder="2"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold text-center"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* --- TERMINAL SIMULATION (about-me.sh) --- */}
+              <div className="pt-6 border-t border-slate-800 space-y-4">
+                <div>
+                  <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
+                    <span className="text-indigo-400">💻</span> Terminal Box — <code className="text-sky-400 font-mono text-xs">about-me.sh</code>
+                  </h3>
+                  <p className="text-xs text-slate-400 mb-4">Edit the terminal shell output for <code className="text-sky-400">cat certifications.txt</code> and <code className="text-sky-400">echo $GOALS</code>.</p>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Terminal Certifications Output (One per line)</label>
+                  <textarea
+                    value={profile.terminal_certs || ""}
+                    onChange={(e) => setProfile({ ...profile, terminal_certs: e.target.value })}
+                    rows={4}
+                    placeholder={`Cyber Security Awareness Training — Amazon\nIntroduction to AI — Great Learning\nZscaler Networking Virtual Internship — AICTE\nPalo Alto Cybersecurity Virtual Internship — AICTE`}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-300 font-mono focus:border-sky-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Short-Term Goal</label>
+                    <input
+                      type="text"
+                      value={profile.goal_short || ""}
+                      onChange={(e) => setProfile({ ...profile, goal_short: e.target.value })}
+                      placeholder="Secure a role in cybersecurity."
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-sky-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Long-Term Goal</label>
+                    <input
+                      type="text"
+                      value={profile.goal_long || ""}
+                      onChange={(e) => setProfile({ ...profile, goal_long: e.target.value })}
+                      placeholder="Grow into a senior security engineer while continuously learning."
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-sky-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* --- TECH STACK & CURRENT FOCUS --- */}
+              <div className="pt-6 border-t border-slate-800 space-y-4">
+                <div>
+                  <h3 className="font-extrabold text-white text-base tracking-tight mb-1 flex items-center gap-2">
+                    <span className="text-purple-400">⚡</span> Tech Stack & Current Focus
+                  </h3>
+                  <p className="text-xs text-slate-400 mb-4">Customize the tech stack pill tags and current focus checklist items.</p>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">About Tech Stack Badges (Comma Separated)</label>
+                  <input
+                    type="text"
+                    value={profile.tech_stack_items || ""}
+                    onChange={(e) => setProfile({ ...profile, tech_stack_items: e.target.value })}
+                    placeholder="React, JavaScript, Python, Node.js, HTML, CSS, Flask, Firebase, Kali Linux, Java, Express, Tailwind"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-sky-400 font-medium focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Current Focus Checklist (Comma or Line Separated)</label>
+                  <input
+                    type="text"
+                    value={profile.current_focus_items || ""}
+                    onChange={(e) => setProfile({ ...profile, current_focus_items: e.target.value })}
+                    placeholder="Security Research, Full Stack Projects, Cloud Platforms"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-emerald-400 font-medium focus:border-sky-500"
+                  />
                 </div>
               </div>
 
