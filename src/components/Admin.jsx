@@ -50,6 +50,7 @@ function Admin() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dbProfileCols, setDbProfileCols] = useState([]);
+  const [dbProfileId, setDbProfileId] = useState(null);
 
   // Form Fields
   const [formData, setFormData] = useState({});
@@ -115,6 +116,9 @@ function Admin() {
     const { data: profileData } = await supabase.from("profile").select("*").limit(1).single();
     if (profileData) {
       setDbProfileCols(Object.keys(profileData));
+      if (profileData.id) {
+        setDbProfileId(profileData.id);
+      }
     }
     let metaData = {};
     try {
@@ -407,15 +411,15 @@ function Admin() {
       degree2: profile.degree2 || "Diploma (2023) — Computer Engineering",
       about_bio: profile.about_bio || "I am a dedicated cybersecurity and full-stack development enthusiast with a strong focus on building secure, scalable applications. I thrive at the intersection of development and security — writing code that's resilient by design.",
       who_i_am_badges: profile.who_i_am_badges || "Full Stack Dev, Cyber Security, Ethical Hacking",
-      stat_internships: profile.stat_internships || "3+",
-      stat_certifications: profile.stat_certifications || "8+",
-      stat_projects: profile.stat_projects || "3+",
-      stat_vulns: profile.stat_vulns || "2",
-      terminal_certs: profile.terminal_certs || "Cyber Security Awareness Training — Amazon\nIntroduction to AI — Great Learning\nZscaler Networking Virtual Internship — AICTE\nPalo Alto Cybersecurity Virtual Internship — AICTE",
+      stat_internships: profile.stat_internships || "",
+      stat_certifications: profile.stat_certifications || "",
+      stat_projects: profile.stat_projects || "",
+      stat_vulns: profile.stat_vulns || "",
+      terminal_certs: profile.terminal_certs || "",
       goal_short: profile.goal_short || "Secure a role in cybersecurity.",
       goal_long: profile.goal_long || "Grow into a senior security engineer while continuously learning.",
-      tech_stack_items: profile.tech_stack_items || "React, JavaScript, Python, Node.js, HTML, CSS, Flask, Firebase, Kali Linux, Java, Express, Tailwind",
-      current_focus_items: profile.current_focus_items || "Security Research, Full Stack Projects, Cloud Platforms",
+      tech_stack_items: profile.tech_stack_items || "",
+      current_focus_items: profile.current_focus_items || "",
     };
 
     const cleanAboutJson = JSON.stringify(aboutData);
@@ -484,8 +488,9 @@ function Admin() {
       // Only attempt DB update if payload has at least one column to update
       if (Object.keys(payload).length > 0) {
         let res;
-        if (profile.id) {
-          res = await supabase.from("profile").update(payload).eq("id", profile.id);
+        const targetRowId = dbProfileId || (profile.id && profile.id !== session?.user?.id ? profile.id : null);
+        if (targetRowId) {
+          res = await supabase.from("profile").update(payload).eq("id", targetRowId);
         } else {
           res = await supabase.from("profile").insert([payload]);
         }

@@ -197,10 +197,10 @@ function About() {
   }, [profile]);
 
   const stats = [
-    { icon: FaBriefcase, value: profile?.stat_internships || liveCounts.experiences || "3+", label: "Internships", color: "#38bdf8" },
-    { icon: FaCertificate, value: profile?.stat_certifications || liveCounts.certifications || "8+", label: "Certifications", color: "#818cf8" },
-    { icon: FaCode, value: profile?.stat_projects || liveCounts.projects || "3+", label: "Projects", color: "#34d399" },
-    { icon: FaShieldAlt, value: profile?.stat_vulns || liveCounts.research || "2", label: "Vulns Found", color: "#fb923c" },
+    { icon: FaBriefcase, value: (profile?.stat_internships && String(profile.stat_internships).trim()) ? profile.stat_internships : (liveCounts.experiences || "3+"), label: "Internships", color: "#38bdf8" },
+    { icon: FaCertificate, value: (profile?.stat_certifications && String(profile.stat_certifications).trim()) ? profile.stat_certifications : (liveCounts.certifications || "8+"), label: "Certifications", color: "#818cf8" },
+    { icon: FaCode, value: (profile?.stat_projects && String(profile.stat_projects).trim()) ? profile.stat_projects : (liveCounts.projects || "3+"), label: "Projects", color: "#34d399" },
+    { icon: FaShieldAlt, value: (profile?.stat_vulns && String(profile.stat_vulns).trim()) ? profile.stat_vulns : (liveCounts.research || "2"), label: "Vulns Found", color: "#fb923c" },
   ];
 
   const terminalCerts = useMemo(() => {
