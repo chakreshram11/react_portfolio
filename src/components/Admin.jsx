@@ -399,18 +399,32 @@ function Admin() {
       current_focus_items: profile.current_focus_items || "Security Research, Full Stack Projects, Cloud Platforms",
     };
 
+    const cleanAboutJson = JSON.stringify(aboutData);
+
+    // Build payload with standard profile columns + serialized about_json
     const payload = {
-      ...profile,
-      ...aboutData,
-      about_json: JSON.stringify(aboutData),
+      full_name: profile.full_name || "",
+      tagline: profile.tagline || "",
+      avatar_url: profile.avatar_url || "",
+      resume_url: profile.resume_url || "",
       phrases: typeof profile.phrases === "string"
         ? profile.phrases.split(",").map((p) => p.trim()).filter(Boolean)
-        : profile.phrases,
+        : profile.phrases || [],
+      facebook_url: profile.facebook_url || "",
+      linkedin_url: profile.linkedin_url || "",
+      instagram_url: profile.instagram_url || "",
+      email: profile.email || "",
+      github_url: profile.github_url || profile.github || "",
+      about_json: cleanAboutJson,
     };
+
+    if (profile.security_pin) {
+      payload.security_pin = profile.security_pin;
+    }
 
     let error;
     let attempts = 0;
-    const maxAttempts = 15;
+    const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
       attempts++;
