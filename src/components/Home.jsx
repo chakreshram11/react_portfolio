@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaFilePdf, FaChevronRight } from "react-icons/fa";
+import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaFilePdf, FaChevronRight, FaGithub } from "react-icons/fa";
 import { supabase, getStorageUrl, fetchProfileData } from "../lib/supabase";
 
 const DEFAULT_PHRASES = [
@@ -23,6 +23,7 @@ function Home() {
   const [phrases, setPhrases] = useState(DEFAULT_PHRASES);
 
   // Social Links
+  const [githubUrl, setGithubUrl] = useState("https://github.com/chakreshram11");
   const [facebookUrl, setFacebookUrl] = useState("#");
   const [linkedinUrl, setLinkedinUrl] = useState("#");
   const [instagramUrl, setInstagramUrl] = useState("#");
@@ -37,6 +38,7 @@ function Home() {
         if (data.avatar_url) setPhotoUrl(getStorageUrl(data.avatar_url));
         if (data.resume_url) setResumeUrl(getStorageUrl(data.resume_url));
         if (Array.isArray(data.phrases) && data.phrases.length > 0) setPhrases(data.phrases);
+        if (data.github_url || data.github) setGithubUrl(data.github_url || data.github);
         if (data.facebook_url) setFacebookUrl(data.facebook_url);
         if (data.linkedin_url) setLinkedinUrl(data.linkedin_url);
         if (data.instagram_url) setInstagramUrl(data.instagram_url);
@@ -147,6 +149,7 @@ function Home() {
               Connect With Me
             </span>
             {[
+              { name: "GitHub", icon: FaGithub, href: githubUrl, color: "hover:text-purple-400 hover:border-purple-500/30 hover:bg-purple-500/10" },
               { name: "Facebook", icon: FaFacebook, href: facebookUrl, color: "hover:text-blue-500 hover:border-blue-500/30 hover:bg-blue-500/10" },
               { name: "LinkedIn", icon: FaLinkedin, href: linkedinUrl, color: "hover:text-sky-500 hover:border-sky-500/30 hover:bg-sky-500/10" },
               { name: "Instagram", icon: FaInstagram, href: instagramUrl, color: "hover:text-pink-500 hover:border-pink-500/30 hover:bg-pink-500/10" },

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPaperPlane, FaEnvelope, FaMapMarkerAlt, FaLinkedin, FaInstagram, FaFacebook } from "react-icons/fa";
+import { FaPaperPlane, FaEnvelope, FaMapMarkerAlt, FaLinkedin, FaInstagram, FaFacebook, FaGithub } from "react-icons/fa";
 
 function Contact() {
   return (
@@ -59,6 +59,7 @@ function Contact() {
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Social Profiles</p>
                 <div className="flex gap-4">
                   {[
+                    { name: "GitHub", icon: FaGithub, href: "https://github.com/chakreshram11", color: "hover:bg-purple-500/20 hover:text-purple-400 hover:border-purple-500/50" },
                     { name: "LinkedIn", icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2]/20 hover:text-[#0A66C2] hover:border-[#0A66C2]/50" },
                     { name: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-[#E1306C]/20 hover:text-[#E1306C] hover:border-[#E1306C]/50" },
                     { name: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2]/20 hover:text-[#1877F2] hover:border-[#1877F2]/50" },

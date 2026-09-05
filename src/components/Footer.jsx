@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaHeart, FaArrowUp, FaCircle } from "react-icons/fa";
+import { FaFacebook, FaLinkedin, FaInstagram, FaEnvelope, FaHeart, FaArrowUp, FaCircle, FaGithub } from "react-icons/fa";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -82,6 +82,7 @@ function Footer() {
           </p>
           <div className="flex gap-4">
             {[
+              { name: "GitHub", icon: FaGithub, href: "https://github.com/chakreshram11", color: "hover:bg-purple-600 hover:shadow-[0_0_20px_rgba(147,51,234,0.4)]" },
               { name: "LinkedIn", icon: FaLinkedin, href: "https://www.linkedin.com/in/chakresh-ram-kudupudi-85a6a0256/", color: "hover:bg-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]" },
               { name: "Instagram", icon: FaInstagram, href: "https://www.instagram.com/chakreshram/", color: "hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:shadow-[0_0_20px_rgba(220,39,67,0.4)]" },
               { name: "Facebook", icon: FaFacebook, href: "https://www.facebook.com/chakresh.ram.1", color: "hover:bg-[#1877F2] hover:shadow-[0_0_20px_rgba(24,119,242,0.4)]" },

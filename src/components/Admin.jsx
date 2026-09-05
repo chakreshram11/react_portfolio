@@ -1017,6 +1017,10 @@ function Admin() {
                 <h3 className="font-bold text-white text-sm border-b border-slate-800 pb-2">Social Connections</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
+                    <label className="block text-[11px] font-semibold text-slate-400 mb-1">GitHub Profile URL</label>
+                    <input type="text" value={profile.github_url || profile.github || ""} onChange={(e) => setProfile({ ...profile, github_url: e.target.value, github: e.target.value })} placeholder="https://github.com/username" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
+                  </div>
+                  <div>
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">Facebook URL</label>
                     <input type="text" value={profile.facebook_url || ""} onChange={(e) => setProfile({ ...profile, facebook_url: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
                   </div>
@@ -1028,7 +1032,7 @@ function Admin() {
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">Instagram URL</label>
                     <input type="text" value={profile.instagram_url || ""} onChange={(e) => setProfile({ ...profile, instagram_url: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
                   </div>
-                  <div>
+                  <div className="sm:col-span-2">
                     <label className="block text-[11px] font-semibold text-slate-400 mb-1">Email Address</label>
                     <input type="email" value={profile.email || ""} onChange={(e) => setProfile({ ...profile, email: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" />
                   </div>
